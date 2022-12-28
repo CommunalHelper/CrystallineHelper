@@ -46,7 +46,7 @@ function returnKeyberry.nodeSprite(room, entity, node, nodeIndex, viewport)
     if nodeIndex == 2 then
         x, y = nodes[1].x, nodes[1].y
     end
-    local line = drawableLine.fromPoints({x, y, node.x, node.y}, {255 / 255, 0 / 255, 255 / 255, 102 / 255})
+    local line = drawableLine.fromPoints({x, y, node.x, node.y}, {1, 0, 1, 0.4})
 
     return {sprite, line}
 end

@@ -49,13 +49,127 @@ placements.entities.vitellary/vitmoveblock.tooltips.canActivate=Determines wheth
 placements.entities.vitellary/vitmoveblock.tooltips.spritePath=Path for the move block's sprite, relative to Graphics/Atlases/Gameplay.
 placements.entities.vitellary/vitmoveblock.tooltips.moveSpeed=Speed the block will move at. Default is 75.
 
-# Remote Trigger
-placements.entities.vitellary/remotetrigger.tooltips.value=The Linked Move Block group the trigger activates.
+# Flag Sequence On Spawn Controller
+placements.entities.vitellary/flagsequencecontroller.tooltips.startNumber=The first number to start the sequence.
+placements.entities.vitellary/flagsequencecontroller.tooltips.endNumber=The final number in the sequence.
+placements.entities.vitellary/flagsequencecontroller.tooltips.prefix=The text that prefixes each flag set. For example, prefix "flagname" with Start Number 8 and End Number 11 will set "flagname_08", "flagname_09", "flagname_10", and "flagname_11" all to the specified state.
+placements.entities.vitellary/flagsequencecontroller.tooltips.state=The state to set all of the flags to.
 
-# Reset Door Trigger
-placements.triggers.vitellary/resetdoortrigger.tooltips.oneUse=Whether the trigger can be used more than once in the room.
-placements.triggers.vitellary/resetdoortrigger.tooltips.animate=Whether doors and keys should animate upon respawning.
-placements.triggers.vitellary/resetdoortrigger.tooltips.onlyInRoom=Whether the trigger should affect keys and doors outside of the current room.
+# Fast Bounce Block
+placements.entities.vitellary/fastbounceblock.tooltips.blockType=Whether the block toggles based on core mode, or is only fire / only ice regardless of core mode.
+
+# Flag Crystal
+placements.entities.vitellary/flagcrystal.tooltips.color=Changes the color of the sprite.
+placements.entities.vitellary/flagcrystal.tooltips.sprite=The location of the crystal sprite.
+placements.entities.vitellary/flagcrystal.tooltips.flag=The flag that will be set when the crystal is picked up and unset when dropped.
+placements.entities.vitellary/flagcrystal.tooltips.spawnFlag=Makes this crystal only spawn if a flag is already set on room entry.
+placements.entities.vitellary/flagcrystal.tooltips.theo=Whether the crystal contains Theo, which makes dropping it kill the player.
+placements.entities.vitellary/flagcrystal.tooltips.invertFlag=If true, the crystal will only spawn if the Spawn Flag is false.
+
+# Deadly Dash Switch
+placements.entities.vitellary/deadlyswitch.tooltips.direction=The facing direction of the dash switch.
+placements.entities.vitellary/deadlyswitch.tooltips.persistent=Once turned on, it will stay activated, even if the player dies.
+
+# Custom Puffer
+placements.entities.vitellary/custompuffer.tooltips.right=The puffer's visual facing direction.
+placements.entities.vitellary/custompuffer.tooltips.static=Whether the puffer floats around idly.
+placements.entities.vitellary/custompuffer.tooltips.alwaysShowOutline=Whether the explosion radius is always visible.
+placements.entities.vitellary/custompuffer.tooltips.pushAnyDir=Whether the puffer can be pushed any direction, or only based on its angle.
+placements.entities.vitellary/custompuffer.tooltips.oneUse=Whether the puffer respawns after exploding.
+placements.entities.vitellary/custompuffer.tooltips.angle=Angle (in degrees) of the explosion half-circle. 0 = below, 90 = left, etc.
+placements.entities.vitellary/custompuffer.tooltips.radius=Size of the explosion radius.
+placements.entities.vitellary/custompuffer.tooltips.launchSpeed=How fast the explosion launches you.
+placements.entities.vitellary/custompuffer.tooltips.respawnTime=How fast the puffer respawns after exploding.
+placements.entities.vitellary/custompuffer.tooltips.sprite=Sprite name from Sprites.xml of the pufferfish. Not reflected in Ahorn.
+placements.entities.vitellary/custompuffer.tooltips.deathFlag=Flag to set when the pufferfish explodes.
+placements.entities.vitellary/custompuffer.tooltips.holdable=Whether the player can pick up and throw the pufferfish.
+placements.entities.vitellary/custompuffer.tooltips.outlineColor=The color of the dotted radius outline.
+placements.entities.vitellary/custompuffer.tooltips.returnToStart=Whether the puffer will respawn at its starting position.
+placements.entities.vitellary/custompuffer.tooltips.holdFlip=Whether the puffer will flip with the player when held.
+placements.entities.vitellary/custompuffer.tooltips.boostMode=The way the puffer's explosion should affect the player.\nSet Speed: Default puffer behavior, sets the player's speed to the launch speed in the angle specified.\nRedirect Speed: If the player has a greater speed than the launch speed specified, apply that speed to the new angle instead.\nRedirect + Add Speed: Takes the player's current speed and redirects it, then adds the puffer's launch speed as well.
+
+# Energy Booster
+placements.entities.vitellary/energybooster.tooltips.behaveLikeDash=Whether the speed resets after the initial boost unless dashing down diagonal.
+placements.entities.vitellary/energybooster.tooltips.redirectSpeed=Stores your total speed regardless of direction and sends you out exactly that fast in the direction you boost.
+placements.entities.vitellary/energybooster.tooltips.oneUse=Whether the booster can only be used once.
+
+# Paired Dash Switch
+placements.entities.vitellary/paireddashswitch.tooltips.flag=If specified, this flag will be set to true when the switch is pressed.
+placements.entities.vitellary/paireddashswitch.tooltips.groupId=The switch will release other switches with the same Group ID when pressed.
+placements.entities.vitellary/paireddashswitch.tooltips.sprite=Sprite name from Sprites.xml of the dash switch. Not reflected in Ahorn.
+placements.entities.vitellary/paireddashswitch.tooltips.direction=Facing direction of the dash switch.
+placements.entities.vitellary/paireddashswitch.tooltips.affectedByFlag=Whether the switch will always match the state of the given flag.
+placements.entities.vitellary/paireddashswitch.tooltips.pressed=Whether the switch is pressed by default.
+
+# Custom Fake Heart
+placements.entities.vitellary/customheart.tooltips.respawnTime=The time in seconds for the heart to respawn after being collected. -1 for no respawn.
+placements.entities.vitellary/customheart.tooltips.poemId=Dialogue ID for the poem. Note: Will be prefixed with "poem_"
+placements.entities.vitellary/customheart.tooltips.color=The hex color for the sprite if using a Custom heart.
+placements.entities.vitellary/customheart.tooltips.path=The path to the heart textures in the "collectables" subfolder.
+placements.entities.vitellary/customheart.tooltips.type=Changes the sprite of the heart.\nRed, Blue, Gold - Vanilla colors\nCustom - Lets you set the sprite path and color\nCore, CoreInverted - Changes based on core mode\nRandom - Randomly picks one of the three main colors
+placements.entities.vitellary/customheart.tooltips.bloom=The bloom strength of the heart.
+placements.entities.vitellary/customheart.tooltips.endLevel=Whether collecting the heart ends the level.
+placements.entities.vitellary/customheart.tooltips.slowdown=Whether collecting the heart plays the cutscene and slows down the game.
+placements.entities.vitellary/customheart.tooltips.light=Whether the heart has some light effect or something idk its usually there
+placements.entities.vitellary/customheart.tooltips.additionalEffects=Minor changes to the heart effects (crystal sounds, break particles, disappearing light)
+placements.entities.vitellary/customheart.tooltips.oneUse=Whether the heart never respawns for the rest of the session.
+placements.entities.vitellary/customheart.tooltips.bully=Whether the heart is a big meanie and bounces you away even if you dash
+placements.entities.vitellary/customheart.tooltips.switchCoreMode=Switches core mode when collected. Red = hot, Blue = cold, other types = toggle
+placements.entities.vitellary/customheart.tooltips.colorGrade=Whether switching core mode also switches color grade between hot and cold.
+placements.entities.vitellary/customheart.tooltips.static=Disables the heart floaty effect.
+
+# Custom Moving Touch Switch
+placements.entities.vitellary/customtouchswitch.tooltips.flag=The session flag this touch switch sets. Give the same to multiple touch switches and switch gates to group them.
+placements.entities.vitellary/customtouchswitch.tooltips.icon=The name of the icon for the touch switch (relative to objects/customMovingTouchSwitch), or "vanilla" for the default one.
+placements.entities.vitellary/customtouchswitch.tooltips.persistent=If enabled, the touch switch will stay active when the player dies or changes rooms.
+placements.entities.vitellary/customtouchswitch.tooltips.inactiveColor=The switch colour when not triggered yet.
+placements.entities.vitellary/customtouchswitch.tooltips.movingColor=The switch colour while moving to the next node.
+placements.entities.vitellary/customtouchswitch.tooltips.activeColor=The switch colour when triggered, but the group is not complete yet.
+placements.entities.vitellary/customtouchswitch.tooltips.finishColor=The switch colour when the group is complete.
+placements.entities.vitellary/customtouchswitch.tooltips.smoke=Whether the touch switch emits smoke when the group is complete.
+placements.entities.vitellary/customtouchswitch.tooltips.inverted=Whether the touch switch should turn off the flag instead of turning it on. The option should match on all touch switches of the group.
+placements.entities.vitellary/customtouchswitch.tooltips.allowDisable=Whether the touch switch can be disabled once the group is complete, if the flag change is reverted.
+placements.entities.vitellary/customtouchswitch.tooltips.badelineDeactivate=Whether the touch switch deactivates when touched by an interactive badeline chaser.
+placements.entities.vitellary/customtouchswitch.tooltips.moveTime=The time it takes for the switch to move between nodes.
+placements.entities.vitellary/customtouchswitch.tooltips.easing=The easing of the switch's movement between nodes.
+
+# Trigger Beam
+placements.entities.vitellary/triggerbeam.tooltips.color=The color of the beam.
+placements.entities.vitellary/triggerbeam.tooltips.alpha=The color alpha of the beam while active.
+placements.entities.vitellary/triggerbeam.tooltips.inactiveAlpha=The color alpha of the beam while inactive (disabled by flag).
+placements.entities.vitellary/triggerbeam.tooltips.flag=Flag to enable/disable the beam. Leave empty for always active.
+placements.entities.vitellary/triggerbeam.tooltips.exitNodes=Comma-separated list of node numbers (e.g. 1,3,5) to specify triggers that will be activated when the player exits the beam. Exit nodes will display a purple arrow.
+placements.entities.vitellary/triggerbeam.tooltips.invertFlag=Whether enabling the flag disables the beam.
+placements.entities.vitellary/triggerbeam.tooltips.exitAlwaysActive=Whether the exit triggers are always active when the player is outside the beam.
+placements.entities.vitellary/triggerbeam.tooltips.attachToSolids=The beam attaches to the surface of the entity or block, and can be moved by them.
+
+# Interactive Badeline Chaser
+placements.entities.vitellary/interactivechaser.tooltips.followDelay=How far behind badeline will follow you.
+placements.entities.vitellary/interactivechaser.tooltips.startDelay=Time before badeline appears and starts chasing you.
+placements.entities.vitellary/interactivechaser.tooltips.mirroring=Mirrors badeline to the other side of the room.
+placements.entities.vitellary/interactivechaser.tooltips.blacklist=Comma-separated list of entity class names to ignore for some interactions.
+placements.entities.vitellary/interactivechaser.tooltips.flag=Flag that will activate badeline.
+placements.entities.vitellary/interactivechaser.tooltips.harmful=Whether badeline kills the player on contact.
+placements.entities.vitellary/interactivechaser.tooltips.canChangeMusic=Whether the music gets set to the badeline chase music.
+
+# Flag Kevin
+placements.entities.vitellary/flagkevin.tooltips.custom_path=Path to the kevin sprite to use. Relative to Atlases/Gameplay/objects.
+placements.entities.vitellary/flagkevin.tooltips.flag_direction=Direction to move when the flag is triggered.
+placements.entities.vitellary/flagkevin.tooltips.flag=Flag that should trigger the kevin.
+placements.entities.vitellary/flagkevin.tooltips.inverted=If true, the kevin is triggered when the flag becomes false rather than true.
+placements.entities.vitellary/flagkevin.tooltips.lava_speed=Percentage of normal speed to use when the kevin is in lava.
+
+# Bumper Block
+placements.entities.vitellary/bumperblock.tooltips.axes=Directions you can dash into to hit the block.
+
+# SMW Checkpoint
+placements.entities.vitellary/smwcheckpoint.tooltips.fullHeight=Whether the hitbox to touch the checkpoint is the full height of the poles, or just the bar.
+
+# Cassette Flag Controller
+placements.entities.vitellary/cassetteflags.tooltips.blueFlag=The flag to enable while the cassette cycle is blue.
+placements.entities.vitellary/cassetteflags.tooltips.pinkFlag=The flag to enable while the cassette cycle is pink.
+placements.entities.vitellary/cassetteflags.tooltips.yellowFlag=The flag to enable while the cassette cycle is yellow.
+placements.entities.vitellary/cassetteflags.tooltips.greenFlag=The flag to enable while the cassette cycle is green.
 
 # Custom Prologue Bridge and Activator
 placements.entities.vitellary/customprologuebridge.tooltips.activationID=The ID used in the Activator to begin crumbling the bridge. Do not reuse IDs throughout the level!
@@ -65,6 +179,14 @@ placements.entities.vitellary/customprologuebridge.tooltips.delay=How long to wa
 placements.entities.vitellary/customprologuebridge.tooltips.speed=How fast the bridge should crumble. 0.8 is just slow enough that the player can keep up without dashing.
 placements.entities.vitellary/customprologuebridge.tooltips.flag=If the flag is true, the bridge won't appear.
 placements.triggers.vitellary/custombridgeactivator.tooltips.activationID=The ID for the group of bridges the trigger should activate.
+
+# Remote Trigger
+placements.entities.vitellary/remotetrigger.tooltips.value=The Linked Move Block group the trigger activates.
+
+# Reset Door Trigger
+placements.triggers.vitellary/resetdoortrigger.tooltips.oneUse=Whether the trigger can be used more than once in the room.
+placements.triggers.vitellary/resetdoortrigger.tooltips.animate=Whether doors and keys should animate upon respawning.
+placements.triggers.vitellary/resetdoortrigger.tooltips.onlyInRoom=Whether the trigger should affect keys and doors outside of the current room.
 
 # Custom Wind Trigger
 placements.triggers.vitellary/customwindtrigger.tooltips.speedX=The horizontal speed of the wind. Can be a list of speeds, separated by commas. For reference, normal wind speed is 4, and strong is 8.
@@ -76,14 +198,6 @@ placements.triggers.vitellary/customwindtrigger.tooltips.loop=Whether the wind s
 placements.triggers.vitellary/customwindtrigger.tooltips.persist=If true, the wind created will stay after transitioning to a different room or dying. It will still be replaced by other wind triggers.
 placements.triggers.vitellary/customwindtrigger.tooltips.oneUse=Whether the wind trigger should disappear after being used.
 placements.triggers.vitellary/customwindtrigger.tooltips.onRoomEnter=Whether the wind trigger should activate immediately when the player enters its room, regardless of the player position.
-
-# Custom Wind Snow
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.colors=List of possible colors the wind particles can have, separated by commas.
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.alphas=List of alphas associated with each color, separated by commas. If the amount of alphas is not the same as the amount of colors, each particle will just take the value of the first alpha listed.
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.amount=Amount of particles. Default is 240.
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.speedX=Horizontal speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.speedY=Vertical speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
-placements.effects.CrystallineHelper/CustomWindSnow.tooltips.ignoreWind=Whether the effect should change based on current wind.
 
 # Player Timestop Trigger
 placements.triggers.vitellary/nomovetrigger.tooltips.stopLength=Determines how long the player will be frozen for.
@@ -123,8 +237,18 @@ placements.triggers.vitellary/bloomstrengthtrigger.tooltips.positionMode=Determi
 # Timed Fade Trigger
 placements.triggers.vitellary/timedfadetrigger.tooltips.time=How long to fade from the From value to the To value.
 
-# Flag Sequence On Spawn Controller
-placements.entities.vitellary/flagsequencecontroller.tooltips.startNumber=The first number to start the sequence.
-placements.entities.vitellary/flagsequencecontroller.tooltips.endNumber=The final number in the sequence.
-placements.entities.vitellary/flagsequencecontroller.tooltips.prefix=The text that prefixes each flag set. For example, prefix "flagname" with Start Number 8 and End Number 11 will set "flagname_08", "flagname_09", "flagname_10", and "flagname_11" all to the specified state.
-placements.entities.vitellary/flagsequencecontroller.tooltips.state=The state to set all of the flags to.
+# Bomb Timer Trigger
+placements.triggers.vitellary/bombtimer.tooltips.sound=Sound to play at the specified time (blank for none).
+placements.triggers.vitellary/bombtimer.tooltips.soundAt=Time at which the specified sound plays.
+placements.triggers.vitellary/bombtimer.tooltips.timer=Countdown duration until the player dies after touching the trigger. A time of 0 safely stops the timer.
+placements.triggers.vitellary/bombtimer.tooltips.startDirection=Direction the player has to move inside the trigger to start the timer.
+placements.triggers.vitellary/bombtimer.tooltips.changeRespawn=Whether the respawn point is set to the nearest one after activing the trigger.
+placements.triggers.vitellary/bombtimer.tooltips.resetOnDeath=Whether the player returns to the start after ANY death.
+
+# Custom Wind Snow
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.colors=List of possible colors the wind particles can have, separated by commas.
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.alphas=List of alphas associated with each color, separated by commas. If the amount of alphas is not the same as the amount of colors, each particle will just take the value of the first alpha listed.
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.amount=Amount of particles. Default is 240.
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.speedX=Horizontal speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.speedY=Vertical speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
+placements.effects.CrystallineHelper/CustomWindSnow.tooltips.ignoreWind=Whether the effect should change based on current wind.

@@ -20,7 +20,7 @@ namespace vitmod
         {
             Depth = -8500;
             Collider = new Circle(10f, 0f, 2f);
-            Add(sprite = VitModule.SpriteBank.Create("boostBumper"));
+            Add(sprite = GFX.SpriteBank.Create("boostBumper"));
             Add(new PlayerCollider(new Action<Player>(OnPlayer), null, null));
             Add(light = new VertexLight(Color.Teal, 1f, 16, 32));
             Add(bloom = new BloomPoint(0.5f, 16f));

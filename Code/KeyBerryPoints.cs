@@ -15,7 +15,7 @@ namespace vitmod
     {
         public KeyBerryPoints(Vector2 position, int index) : base(position)
         {
-            Add(sprite = VitModule.SpriteBank.Create("keyberry"));
+            Add(sprite = GFX.SpriteBank.Create("keyberry"));
             Add(light = new VertexLight(Color.White, 1f, 16, 24));
             Add(bloom = new BloomPoint(1f, 12f));
             Depth = -2000100;

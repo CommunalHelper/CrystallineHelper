@@ -28,7 +28,7 @@ namespace vitmod
             didHaveRider = false;
             startY = Y;
             Depth = 1;
-            bodySprite = VitModule.SpriteBank.Create("locked_intro_car_body");
+            bodySprite = GFX.SpriteBank.Create("locked_intro_car_body");
             bodySprite.Y -= 9f;
             Add(bodySprite);
             Hitbox hitbox = new Hitbox(27f, 15f, -17f, -17f);
@@ -45,7 +45,7 @@ namespace vitmod
         {
             base.Added(scene);
             wheels = new Entity(Position);
-            wheelSprite = VitModule.SpriteBank.Create("locked_intro_car_wheels");
+            wheelSprite = GFX.SpriteBank.Create("locked_intro_car_wheels");
             wheelSprite.Y -= 9f;
             wheels.Add(wheelSprite);
             wheels.Depth = 3;

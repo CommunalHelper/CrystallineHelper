@@ -33,7 +33,7 @@ namespace vitmod
             id = ID.ToString();
             Collidable = false;
 
-            Add(sprite = VitModule.SpriteBank.Create("kaizoblock"));
+            Add(sprite = GFX.SpriteBank.Create("kaizoblock"));
             sprite.Play("idle");
             sprite.Visible = false;
             sprite.Position = new Vector2(8, 8);

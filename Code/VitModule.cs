@@ -45,6 +45,12 @@ namespace vitmod
             public List<EntityID> introCarsToReset = new List<EntityID>();
             public Dictionary<EntityID, EntityData> introCarEntityDatas = new Dictionary<EntityID, EntityData>();
             public Dictionary<EntityID, Vector2> introCarOffsets = new Dictionary<EntityID, Vector2>();
+
+            public bool BombTimerActive;
+            public Vector2 BombTimerStartPos;
+            public string BombTimerStartLevel;
+            public HashSet<EntityID> BombTimerStartKeys = new HashSet<EntityID>();
+            public HashSet<EntityID> BombTimerRemovedEntities = new HashSet<EntityID>();
         }
 
         public class VitModuleSettings : EverestModuleSettings
@@ -64,7 +70,6 @@ namespace vitmod
 
         public override void LoadContent(bool firstLoad)
         {
-            SpriteBank = new SpriteBank(GFX.Game, "Graphics/CrystallineHelper/CustomSprites.xml");
             //fill crystal
             FillCrystal.P_Shatter = new ParticleType(Refill.P_Shatter)
             {
@@ -237,6 +242,11 @@ namespace vitmod
             };
             BoostBumper.P_Idle = new ParticleType(Bumper.P_Ambience);
         }
+
+        public override void Initialize() {
+            base.Initialize();
+            TriggerBeam.Initialize();
+        }
         public override void Load()
         {
             //cacheing
@@ -270,6 +280,17 @@ namespace vitmod
             TimeCrystal.Load();
             TimeFadeTrigger.Load();
             KaizoBlock.Load();
+
+            BombTimerTrigger.Load();
+            CustomPuffer.Load();
+            DeadlyDashSwitch.Load();
+            DropHoldableTrigger.Load();
+            EnergyBooster.Load();
+            FlagCrystal.Load();
+            InteractiveChaser.Load();
+            PairedDashSwitch.Load();
+            TempleGateAllSwitches.Load();
+            TriggerBeam.Load();
 
 
             //timestuff
@@ -760,6 +781,17 @@ namespace vitmod
             TimeCrystal.Unload();
             TimeFadeTrigger.Unload();
             KaizoBlock.Unload();
+            BombTimerTrigger.Unload();
+            CustomPuffer.Unload();
+            DeadlyDashSwitch.Unload();
+            DropHoldableTrigger.Unload();
+            EnergyBooster.Unload();
+            FlagCrystal.Unload();
+            InteractiveChaser.Unload();
+            PairedDashSwitch.Unload();
+            TempleGateAllSwitches.Unload();
+            TriggerBeam.Unload();
+
             On.Celeste.Level.Update -= Level_Update;
             IL.Monocle.EntityList.Update -= EntityList_Update;
             IL.Monocle.RendererList.Update -= RendererList_Update;
@@ -774,8 +806,6 @@ namespace vitmod
             On.Celeste.Level.Reload -= Level_Reload;
         }
 
-        public static SpriteBank SpriteBank;
-
         private float rainbowTimer;
 
         public static float timeStopScaleTimer;
@@ -787,6 +817,38 @@ namespace vitmod
         private float timeStopRawDelta;
 
         public static TimeCrystal.freezeTypes timeStopType;
+
+        public static Dictionary<string, Ease.Easer> EaseTypes = new Dictionary<string, Ease.Easer>
+        {
+            { "Linear", Ease.Linear },
+            { "SineIn", Ease.SineIn },
+            { "SineOut", Ease.SineOut },
+            { "SineInOut", Ease.SineInOut },
+            { "QuadIn", Ease.QuadIn },
+            { "QuadOut", Ease.QuadOut },
+            { "QuadInOut", Ease.QuadInOut },
+            { "CubeIn", Ease.CubeIn },
+            { "CubeOut", Ease.CubeOut },
+            { "CubeInOut", Ease.CubeInOut },
+            { "QuintIn", Ease.QuintIn },
+            { "QuintOut", Ease.QuintOut },
+            { "QuintInOut", Ease.QuintInOut },
+            { "BackIn", Ease.BackIn },
+            { "BackOut", Ease.BackOut },
+            { "BackInOut", Ease.BackInOut },
+            { "ExpoIn", Ease.ExpoIn },
+            { "ExpoOut", Ease.ExpoOut },
+            { "ExpoInOut", Ease.ExpoInOut },
+            { "BigBackIn", Ease.BigBackIn },
+            { "BigBackOut", Ease.BigBackOut },
+            { "BigBackInOut", Ease.BigBackInOut },
+            { "ElasticIn", Ease.ElasticIn },
+            { "ElasticOut", Ease.ElasticOut },
+            { "ElasticInOut", Ease.ElasticInOut },
+            { "BounceIn", Ease.BounceIn },
+            { "BounceOut", Ease.BounceOut },
+            { "BounceInOut", Ease.BounceInOut }
+        };
 
         public static float noMoveScaleTimer;
 

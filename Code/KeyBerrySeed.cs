@@ -50,7 +50,7 @@ namespace vitmod
         {
             level = SceneAs<Level>();
             base.Awake(scene);
-            sprite = VitModule.SpriteBank.Create("keyberrySeed");
+            sprite = GFX.SpriteBank.Create("keyberrySeed");
             sprite.Position = new Vector2(sine.Value * 2f, sine.ValueOverTwo * 1f);
             Add(sprite);
             float spriteoffset = 1f - index / (Scene.Tracker.CountEntities<KeyBerrySeed>() + 1f);

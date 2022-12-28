@@ -66,7 +66,7 @@ namespace vitmod
         public override void Added(Scene scene)
         {
             base.Added(scene);
-            sprite = VitModule.SpriteBank.Create("keyberry");
+            sprite = GFX.SpriteBank.Create("keyberry");
             Add(sprite);
             if (winged)
             {
