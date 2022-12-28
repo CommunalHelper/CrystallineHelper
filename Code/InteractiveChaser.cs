@@ -308,7 +308,7 @@ namespace vitmod
 		{
 			if (!player.Dead)
 			{
-				var chaserStates = new DynData<Player>(player).Get<List<ChaserState>>("flushelineInteractiveChaserStates");
+				var chaserStates = new DynData<Player>(player).Get<List<ChaserState>>("vitellaryInteractiveChaserStates");
 				bool flag = false;
 				foreach (ChaserState chaserState in chaserStates)
 				{
@@ -369,7 +369,7 @@ namespace vitmod
 
 		private static void Player_OnTransition(On.Celeste.Player.orig_OnTransition orig, Player self)
 		{
-			var chaserStates = new DynData<Player>(self).Get<List<ChaserState>>("flushelineInteractiveChaserStates");
+			var chaserStates = new DynData<Player>(self).Get<List<ChaserState>>("vitellaryInteractiveChaserStates");
 			chaserStates.Clear();
 			orig(self);
 		}
@@ -381,16 +381,16 @@ namespace vitmod
 			{
 				var player = self as Player;
 				var playerData = new DynData<Player>(player);
-				playerData.Set("flushelineChaserPosition", player.Position);
-				playerData.Set("flushelineChaserSpeed", player.Speed);
+				playerData.Set("vitellaryChaserPosition", player.Position);
+				playerData.Set("vitellaryChaserSpeed", player.Speed);
 				if (player.DashAttacking && player.Speed.Length() > 0f)
-					playerData.Set("flushelineChaserDashed", player.DashDir);
+					playerData.Set("vitellaryChaserDashed", player.DashDir);
 			}
 		}
 
 		private static void Player_Update(On.Celeste.Player.orig_Update orig, Player self)
 		{
-			new DynData<Player>(self).Set("flushelineChaserDashed", Vector2.Zero);
+			new DynData<Player>(self).Set("vitellaryChaserDashed", Vector2.Zero);
 			orig(self);
 		}
 
@@ -398,9 +398,9 @@ namespace vitmod
 		{
 			orig(self, position, spriteMode);
 			var playerData = new DynData<Player>(self);
-			playerData.Set("flushelineInteractiveChaserStates", new List<ChaserState>());
-			playerData.Set("flushelineChaserPosition", self.Position);
-			playerData.Set("flushelineChaserSpeed", self.Speed);
+			playerData.Set("vitellaryInteractiveChaserStates", new List<ChaserState>());
+			playerData.Set("vitellaryChaserPosition", self.Position);
+			playerData.Set("vitellaryChaserSpeed", self.Speed);
 		}
 
 		private static PlayerDeadBody Player_Die(On.Celeste.Player.orig_Die orig, Player self, Vector2 direction, bool evenIfInvincible, bool registerDeathInStats)
@@ -416,7 +416,7 @@ namespace vitmod
 			if (chasers.Count > 0)
 			{
 				var maxDelay = chasers.Max(e => (e as InteractiveChaser).FollowDelay);
-				var chaserStates = new DynData<Player>(self).Get<List<ChaserState>>("flushelineInteractiveChaserStates");
+				var chaserStates = new DynData<Player>(self).Get<List<ChaserState>>("vitellaryInteractiveChaserStates");
 				while (chaserStates.Count > 0 && self.Scene.TimeActive - chaserStates[0].TimeStamp > maxDelay)
 					chaserStates.RemoveAt(0);
 				chaserStates.Add(new ChaserState(self));
@@ -639,9 +639,9 @@ namespace vitmod
 				HairColor = player.Hair.Color;
 				Depth = player.Depth;
 				Scale = new Vector2(Math.Abs(player.Sprite.Scale.X) * (float)player.Facing, player.Sprite.Scale.Y);
-				EarlyPosition = playerData.Get<Vector2>("flushelineChaserPosition");
-				Speed = playerData.Get<Vector2>("flushelineChaserSpeed");
-				DashDir = playerData.Get<Vector2>("flushelineChaserDashed");
+				EarlyPosition = playerData.Get<Vector2>("vitellaryChaserPosition");
+				Speed = playerData.Get<Vector2>("vitellaryChaserSpeed");
+				DashDir = playerData.Get<Vector2>("vitellaryChaserDashed");
 				Ducking = player.Ducking;
 				State = player.StateMachine.State;
 				GrabState = player.Ducking ? GrabState.Drop : ((Input.Grab.Check && DashDir == Vector2.Zero) ? GrabState.Held : (Input.MoveY == 1 ? GrabState.Drop : GrabState.None));
