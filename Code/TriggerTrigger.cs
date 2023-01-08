@@ -59,9 +59,9 @@ namespace vitmod
                 collideEnity = data.Attr("entityType", "");
             }
             collideCount = data.Int("collideCount", 1);
-            entitiesTouched = new List<Entity>();
+            entitiesTouched = new HashSet<Entity>();
             collideSolid = data.Attr("solidType", "");
-            entitiesInside = new List<Entity>();
+            entitiesInside = new HashSet<Entity>();
             Add(new HoldableCollider((Holdable holdable) => {
                 if (activationType == ActivationTypes.OnHoldableEnter)
                 {
@@ -498,27 +498,22 @@ namespace vitmod
             bool result = orig(self, player);
 
             Entity entity = self.Entity;
-            foreach (TriggerTrigger trigger in self.SceneAs<Level>().Tracker.GetEntities<TriggerTrigger>())
-            {
-                if (result)
-                {
-                    if (trigger.activationType == ActivationTypes.OnEntityCollide && VitModule.GetClassName(trigger.collideEnity, entity))
-                    {
-                        if (!trigger.entitiesTouched.Contains(entity))
-                        {
-                            trigger.entitiesTouched.Add(entity);
+            foreach (TriggerTrigger trigger in TriggerTriggers) {
+                if (trigger.activationType == ActivationTypes.OnEntityCollide) {
+                    if (result) {
+                        if (VitModule.GetClassName(trigger.collideEnity, entity) && trigger.entitiesTouched.Add(entity)) {
                             trigger.collideEntityCount++;
                         }
+                    } else {
+                        trigger.entitiesTouched.Remove(entity);
                     }
-                }
-                else if (trigger.entitiesTouched.Contains(entity))
-                {
-                    trigger.entitiesTouched.Remove(entity);
                 }
             }
 
             return result;
         }
+
+        public static List<Entity> TriggerTriggers;
 
         public bool Global;
         public bool Activated;
@@ -535,9 +530,9 @@ namespace vitmod
         public string collideEnity;
         public int collideEntityCount;
         private int collideCount;
-        public List<Entity> entitiesTouched;
+        public HashSet<Entity> entitiesTouched;
         private Session.CoreModes coreMode;
-        private List<Entity> entitiesInside;
+        private HashSet<Entity> entitiesInside;
         private string collideSolid;
         public bool externalActivation;
         private bool invertCondition;

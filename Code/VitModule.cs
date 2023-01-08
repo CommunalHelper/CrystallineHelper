@@ -454,6 +454,8 @@ namespace vitmod
                 useNoMoveDelta = false;
             }
 
+            TriggerTrigger.TriggerTriggers = self.Tracker.GetEntities<TriggerTrigger>();
+
             orig(self);
         }
 
