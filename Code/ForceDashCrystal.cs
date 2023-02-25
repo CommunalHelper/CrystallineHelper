@@ -389,6 +389,12 @@ namespace vitmod
             dirToUse = null;
         }
 
+        public override void SceneEnd(Scene scene)
+        {
+            base.SceneEnd(scene);
+            dirToUse = null;
+        }
+
         private void Respawn()
         {
             if (!Collidable)
