@@ -25,7 +25,8 @@ timeCrystal.placements = {
             untilDash = false,
             immediate = false,
             entityTypesToIgnore = "",
-            timeScale = 0.0
+            timeScale = 0.0,
+			flag = ""
         }
     },
     {
@@ -37,7 +38,8 @@ timeCrystal.placements = {
             untilDash = true,
             immediate = false,
             entityTypesToIgnore = "",
-            timeScale = 0.0
+            timeScale = 0.0,
+			flag = ""
         }
     }
 }

@@ -4,10 +4,6 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace vitmod
 {
@@ -35,6 +31,7 @@ namespace vitmod
             untilDash = data.Bool("untilDash", false);
             entityTypesIgnore = data.Attr("entityTypesToIgnore", "").Split(',');
             privateTimeScale = data.Float("timeScale", 0f);
+            flag = data.Attr("flag", "");
 
             Collider = new Hitbox(16f, 16f, -8f, -8f);
             Add(new PlayerCollider(new Action<Player>(OnPlayer), null, null));
@@ -111,6 +108,9 @@ namespace vitmod
                 wiggler.Start();
                 Audio.Play("event:/game/general/diamond_return", Position);
                 level.ParticlesFG.Emit(untilDash ? P_Regen_UntilDash : P_Regen, 16, Position, Vector2.One * 2f);
+                if (!string.IsNullOrEmpty(flag)) {
+                    (Scene as Level).Session.SetFlag(flag, false);
+                }
             }
         }
 
@@ -133,6 +133,9 @@ namespace vitmod
             Audio.Play("event:/game/general/diamond_touch", Position);
             Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
             Collidable = false;
+            if (!string.IsNullOrEmpty(flag)) {
+                (Scene as Level).Session.SetFlag(flag, true);
+            }
             Add(new Coroutine(RefillRoutine(player), true));
             if (oneUse)
             {
@@ -264,6 +267,8 @@ namespace vitmod
         private SineWave sine;
 
         private float respawnTimer;
+
+        private string flag;
 
         public enum freezeTypes
         {

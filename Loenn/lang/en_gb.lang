@@ -121,6 +121,7 @@ entities.vitellary/timecrystal.attributes.description.respawnTime=How long (in s
 entities.vitellary/timecrystal.attributes.description.immediate=Whether the transition to time stopping should be smooth or instantaneous.
 entities.vitellary/timecrystal.attributes.description.entityTypesToIgnore=List of class names for the time crystal to not affect, separated by commas.
 entities.vitellary/timecrystal.attributes.description.timeScale=The time scale that the entities should be changed to.
+entities.vitellary/timecrystal.attributes.description.flag=Flag which is set when time stops, and unset when time continues.
 
 # Tele Crystal
 entities.vitellary/telecrystal.attributes.description.direction=The direction of the crystal.
