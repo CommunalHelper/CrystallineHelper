@@ -101,6 +101,7 @@ namespace vitmod
 			if (respawnTimer <= 0f && cannotUseTimer <= 0f && BoostingPlayer == null)
 			{
 				cannotUseTimer = 0.45f;
+				player.boostRed = false;
 				player.StateMachine.State = 4;
 				PlayerSpeed = player.Speed;
 				if (player.LiftSpeed != Vector2.Zero)
