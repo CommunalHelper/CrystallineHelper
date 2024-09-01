@@ -65,6 +65,7 @@ entities.vitellary/triggerbeam.placements.name.beam_left=Trigger Beam (Left)
 entities.vitellary/triggerbeam.placements.name.beam_up=Trigger Beam (Up)
 entities.vitellary/dashcodecontroller.placements.name.dash_code_controller=Dash Code Controller
 entities.vitellary/roomname.placements.name.room_name=Room Name Controller
+entities.vitellary/unocclusion.placements.name.unocclusion=Unocclusion Controller
 
 # Triggers
 
@@ -300,6 +301,9 @@ entities.vitellary/cassetteflags.attributes.description.greenFlag=The flag to en
 
 # Room Name Controller
 entities.vitellary/roomname.attributes.description.roomName=The text to appear at the bottom of the screen.
+
+# Unocclusion Controller
+entities.vitellary/unocclusion.placements.description.unocclusion=Allows light to enter solids, instead of being blocked by them.
 
 # Remote Trigger
 entities.vitellary/remotetrigger.attributes.description.value=The Linked Move Block group the trigger activates.

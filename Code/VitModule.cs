@@ -300,6 +300,7 @@ namespace vitmod
             PairedDashSwitch.Load();
             TempleGateAllSwitches.Load();
             TriggerBeam.Load();
+            Unocclusion.Load();
 
 
             //timestuff
@@ -818,6 +819,7 @@ namespace vitmod
             PairedDashSwitch.Unload();
             TempleGateAllSwitches.Unload();
             TriggerBeam.Unload();
+            Unocclusion.Unload();
 
             On.Celeste.Level.Update -= Level_Update;
             IL.Monocle.EntityList.Update -= EntityList_Update;
