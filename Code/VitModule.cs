@@ -251,6 +251,8 @@ namespace vitmod
         public override void Initialize() {
             base.Initialize();
             TriggerBeam.Initialize();
+
+            Imports.SpeedrunTool.Initialize();
         }
         public override void Load()
         {
