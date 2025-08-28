@@ -333,9 +333,18 @@ namespace vitmod
 
         private void Level_Update(On.Celeste.Level.orig_Update orig, Level self)
         {
-            //timestop crystal
+            //time crstal
+            if (self.Paused) {
+                //jank because the level becomes "paused" after this update runs, so it's easier to just revert any changes
+                //that might have happened on the next frame (and we are garunteed to have at least one frame with self.Paused=true)
+                TimeCrystal.stopStage = TimeCrystal.prevStage;
+                TimeCrystal.stopTimer = TimeCrystal.prevTimer;
+            }
             if (!(self.FrozenOrPaused || self.unpauseTimer>0))
             {
+                //enable stupid first frame pause reversion
+                TimeCrystal.prevTimer = TimeCrystal.stopTimer;
+                TimeCrystal.prevStage = TimeCrystal.stopStage;
                 if (TimeCrystal.stopTimer > 0f)
                 {
                     TimeCrystal.stopTimer -= Engine.DeltaTime;
