@@ -259,8 +259,12 @@ namespace vitmod
 
         public static float stopTimer;
 
+        public static float prevTimer;
+
         public static int stopStage;
 
+        public static int prevStage;
+        
         private Sprite sprite;
 
         private Sprite flash;

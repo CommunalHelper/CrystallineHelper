@@ -333,9 +333,18 @@ namespace vitmod
 
         private void Level_Update(On.Celeste.Level.orig_Update orig, Level self)
         {
-            //timestop crystal
-            if (!self.Paused)
+            //time crstal
+            if (self.Paused) {
+                //jank because the level becomes "paused" after this update runs, so it's easier to just revert any changes
+                //that might have happened on the next frame (and we are garunteed to have at least one frame with self.Paused=true)
+                TimeCrystal.stopStage = TimeCrystal.prevStage;
+                TimeCrystal.stopTimer = TimeCrystal.prevTimer;
+            }
+            if (!(self.FrozenOrPaused || self.unpauseTimer>0))
             {
+                //enable stupid first frame pause reversion
+                TimeCrystal.prevTimer = TimeCrystal.stopTimer;
+                TimeCrystal.prevStage = TimeCrystal.stopStage;
                 if (TimeCrystal.stopTimer > 0f)
                 {
                     TimeCrystal.stopTimer -= Engine.DeltaTime;
@@ -376,11 +385,9 @@ namespace vitmod
                         }
                     }
                 }
-            }
+            
 
-            if (TimeCrystal.stopStage > 0)
-            {
-                if (!self.Paused)
+                if (TimeCrystal.stopStage > 0)
                 {
                     if (TimeCrystal.timeScaleToSet < 1)
                     {
@@ -390,34 +397,33 @@ namespace vitmod
                     {
                         timeStopScaleTimer -= Engine.DeltaTime;
                     }
-                }
 
-                float timestop_delta_mult = 1;
-                if (TimeCrystal.stopStage == 1)
-                {
-                    timestop_delta_mult = Math.Max(TimeCrystal.timeScaleToSet, 1 - (timeStopScaleTimer / 0.5f));
-                }
-                else if (TimeCrystal.stopStage == 2)
-                {
-                    timestop_delta_mult = Math.Min(1, timeStopScaleTimer / 0.5f);
-                }
+                    float timestop_delta_mult = 1;
+                    if (TimeCrystal.stopStage == 1)
+                    {
+                        timestop_delta_mult = Math.Max(TimeCrystal.timeScaleToSet, 1 - (timeStopScaleTimer / 0.5f));
+                    }
+                    else if (TimeCrystal.stopStage == 2)
+                    {
+                        timestop_delta_mult = Math.Min(1, timeStopScaleTimer / 0.5f);
+                    }
 
-                if (timestop_delta_mult != 1)
-                {
-                    useTimeStopDelta = true;
-                    timeStopDelta = Engine.DeltaTime * timestop_delta_mult;
-                    timeStopRawDelta = Engine.RawDeltaTime * timestop_delta_mult;
+                    if (timestop_delta_mult != 1)
+                    {
+                        useTimeStopDelta = true;
+                        timeStopDelta = Engine.DeltaTime * timestop_delta_mult;
+                        timeStopRawDelta = Engine.RawDeltaTime * timestop_delta_mult;
+                    }
+                    else
+                    {
+                        useTimeStopDelta = false;
+                    }
                 }
                 else
                 {
                     useTimeStopDelta = false;
                 }
             }
-            else
-            {
-                useTimeStopDelta = false;
-            }
-
             //no move trigger
             if (NoMoveTrigger.stopTimer > 0f && !self.Paused)
             {
