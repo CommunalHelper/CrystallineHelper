@@ -31,7 +31,7 @@ namespace vitmod
         public static void Player_Jump(On.Celeste.Player.orig_Jump orig, Player self, bool particles, bool playSfx)
         {
             grabbing = self.CollideCheck<Solid>(self.Position + Vector2.UnitX * (float) self.Facing) && Input.Grab.Check;
-            if (!self.Dead && (!self.CollideCheck<NoJumpTrigger>() || grabbing))
+            if (!self.CollideCheck<NoJumpTrigger>() || grabbing)
             {
                 orig(self, particles, playSfx);
             }
@@ -39,7 +39,7 @@ namespace vitmod
 
         public static void Player_SuperJump(On.Celeste.Player.orig_SuperJump orig, Player self)
         {
-            if (!self.Dead && !self.CollideCheck<NoJumpTrigger>())
+            if (!self.CollideCheck<NoJumpTrigger>())
             {
                 orig(self);
             }
