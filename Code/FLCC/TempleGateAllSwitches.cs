@@ -1,7 +1,12 @@
 ﻿using Celeste;
 using Celeste.Mod.Entities;
+using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
+using Mono.Cecil.Cil;
 using Monocle;
+using MonoMod.Cil;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace vitmod {
     [Tracked()]
@@ -11,39 +16,52 @@ namespace vitmod {
             ClaimedByASwitch = true;
         }
 
-        public static void Load() {
-            On.Celeste.DashSwitch.Awake += DashSwitch_Awake;
-        }
-
-        public static void Unload() {
-            On.Celeste.DashSwitch.Awake -= DashSwitch_Awake;
-        }
-
-        private static void DashSwitch_Awake(On.Celeste.DashSwitch.orig_Awake orig, DashSwitch self, Scene scene) {
-            orig(self, scene);
-            DashCollision orig_OnDashCollide = self.OnDashCollide;
-            self.OnDashCollide = (Player player, Vector2 direction) => {
+        private static void HookOnDashCollide(DashSwitch dashSwitch) {
+            DashCollision orig_OnDashCollide = dashSwitch.OnDashCollide;
+            
+            dashSwitch.OnDashCollide = (player, direction) => {
                 DashCollisionResults result = orig_OnDashCollide(player, direction);
-                bool finalswitch = true;
-                if (self.pressed) {
-                    foreach (Solid solid in self.SceneAs<Level>().Tracker.GetEntities<Solid>()) {
-                        if (solid is DashSwitch dashSwitch) {
-                            if (!dashSwitch.pressed) {
-                                finalswitch = false;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    finalswitch = false;
-                }
-                if (finalswitch) {
-                    foreach (TempleGateAllSwitches gate in self.SceneAs<Level>().Tracker.GetEntities<TempleGateAllSwitches>()) {
-                        gate.Open();
-                    }
-                }
+                if (!dashSwitch.pressed || dashSwitch.Scene.Entities.Any(entity => entity is DashSwitch { pressed: false }))
+                    return result;
+                
+                foreach (TempleGateAllSwitches gate in dashSwitch.Scene.Tracker.GetEntities<TempleGateAllSwitches>().Cast<TempleGateAllSwitches>())
+                    gate.Open();
+
                 return result;
             };
         }
+        
+        #region Hooks
+
+        internal static void Load() {
+            IL.Monocle.EntityList.UpdateLists += EntityList_UpdateLists;
+        }
+
+        internal static void Unload() {
+            IL.Monocle.EntityList.UpdateLists -= EntityList_UpdateLists;
+        }
+
+        private static void EntityList_UpdateLists(ILContext il) {
+            ILCursor cursor = new(il);
+
+            if (!cursor.TryGotoNextBestFit(MoveType.After,
+                instr => instr.MatchLdloc(5),
+                instr => instr.MatchLdarg0(),
+                instr => instr.MatchCallvirt<EntityList>("get_Scene"),
+                instr => instr.MatchCallvirt<Entity>("Awake")))
+                return;
+        
+            cursor.EmitLdloc(5);
+            cursor.EmitDelegate(ProcessDashSwitch);
+
+            return;
+
+            static void ProcessDashSwitch(Entity entity) {
+                if (entity is DashSwitch dashSwitch)
+                    HookOnDashCollide(dashSwitch);
+            }
+        }
+        
+        #endregion
     }
 }
