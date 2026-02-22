@@ -209,6 +209,7 @@ entities.vitellary/custompuffer.attributes.description.boostMode=The way the puf
 entities.vitellary/custompuffer.attributes.description.legacyBoost=Whether the puffer boost should use the older, less lenient method of checking player input (only accepting input before the freeze frames, rather than after).
 entities.vitellary/custompuffer.attributes.description.absoluteVector=If true, the redirect modes for launch will use the player's full speed, including vertical and horizontal, rather than only horizontal speed.
 entities.vitellary/custompuffer.attributes.description.tangible=Controls if the puffer can be hit by the player.
+entities.vitellary/custompuffer.attributes.description.dashCooldown=Whether the player will receive dash cooldown when launched by the puffer.
 
 # Energy Booster
 entities.vitellary/energybooster.attributes.description.behaveLikeDash=Whether the speed resets after the initial boost unless dashing down diagonal.

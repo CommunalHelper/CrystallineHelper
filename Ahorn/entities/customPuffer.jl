@@ -2,7 +2,7 @@ module FlushelineCustomPuffer
 
 using ..Ahorn, Maple
 
-@mapdef Entity "vitellary/custompuffer" CustomPuffer(x::Integer, y::Integer, right::Bool=false, static::Bool=false, alwaysShowOutline::Bool=true, pushAnyDir::Bool=false, oneUse::Bool=false, angle::Number=0.0, radius::Integer=32, launchSpeed::Number=280.0, respawnTime::Number=2.5, sprite::String="pufferFish", deathFlag::String="", holdable::Bool=false, outlineColor::String="FFFFFF", returnToStart::Bool=true, holdFlip::Bool=false, boostMode::String="SetSpeed", tangible::Bool=true)
+@mapdef Entity "vitellary/custompuffer" CustomPuffer(x::Integer, y::Integer, right::Bool=false, static::Bool=false, alwaysShowOutline::Bool=true, pushAnyDir::Bool=false, oneUse::Bool=false, angle::Number=0.0, radius::Integer=32, launchSpeed::Number=280.0, respawnTime::Number=2.5, sprite::String="pufferFish", deathFlag::String="", holdable::Bool=false, outlineColor::String="FFFFFF", returnToStart::Bool=true, holdFlip::Bool=false, boostMode::String="SetSpeed", tangible::Bool=true, dashCooldown::Bool=true)
 
 const placements = Ahorn.PlacementDict(
     "Custom Puffer (Right) (Crystalline)" => Ahorn.EntityPlacement(
