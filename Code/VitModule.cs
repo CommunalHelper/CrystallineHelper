@@ -252,6 +252,13 @@ namespace vitmod
         public override void Initialize()
         {
             base.Initialize();
+
+            maddieHelpingHandLoaded = Everest.Loader.DependencyLoaded(new EverestModuleMetadata
+            {
+                Name = "MaxHelpingHand",
+                Version = new Version(1, 39, 14)
+            });
+
             TriggerBeam.Initialize();
         }
         public override void Load()
@@ -952,6 +959,8 @@ namespace vitmod
         public static bool frostHelperLoaded;
 
         public static bool vivHelperLoaded;
+
+        public static bool maddieHelpingHandLoaded;
 
         public static Hook hookedCustomSpinner;
 

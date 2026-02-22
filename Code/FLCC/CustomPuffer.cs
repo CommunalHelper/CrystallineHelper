@@ -6,6 +6,7 @@ using Monocle;
 using MonoMod.Utils;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace vitmod
 {
@@ -82,6 +83,10 @@ namespace vitmod
 		private bool renderEye = true;
 		private bool dashCooldown = false;
 
+		// 0 - original
+		// 1 - frost helper custom spring speed mult support & ceiling spring support
+		private int version = 0;
+
 		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish")
 			: base(position)
 		{
@@ -124,6 +129,7 @@ namespace vitmod
 		{
 			ID = id;
 
+			version = data.Int("version", 0);
 			respawnTime = data.Float("respawnTime", 2.5f);
 			alwaysShowOutline = data.Bool("alwaysShowOutline");
 			isStatic = data.Bool("static");
@@ -320,16 +326,16 @@ namespace vitmod
 			scale = new Vector2(1.2f, 0.8f);
 
 			if (deg >= -45f && deg <= 45f)
-				// top open
+				// hit from top
 				hitSpeed = Vector2.UnitY * 200f;
 			else if (deg >= 135f && deg <= 225f)
-				// bottom open
+				// hit from bottom
 				hitSpeed = Vector2.UnitY * -150f;
 			else if (deg < 180f)
-				// right open
+				// hit from right
 				hitSpeed = Vector2.UnitX * -200f;
 			else
-				// left open
+				// hit from left
 				hitSpeed = Vector2.UnitX * 200f;
 
 			State = States.Hit;
@@ -636,44 +642,56 @@ namespace vitmod
 
 		public bool HitSpring(Spring spring)
 		{
+			// handle ceiling springs
+			if (version >= 1 && ((VitModule.frostHelperLoaded && IsFrostHelperCeilingSpring(spring)) || (VitModule.maddieHelpingHandLoaded && IsMaddieHelpingHandCeilingSpring(spring))))
+			{
+				if (hitSpeed.Y <= 0f)
+				{
+					GotoHitSpeed(224f * Vector2.UnitY);
+					MoveTowardsX(spring.CenterX, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
+				}
+
+				return false;
+			}
+
 			switch (spring.Orientation)
 			{
-				default:
-					if (hitSpeed.Y >= 0f)
-					{
-						GotoHitSpeed(224f * -Vector2.UnitY);
-						MoveTowardsX(spring.CenterX, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
+				case Spring.Orientations.Floor when hitSpeed.Y >= 0f:
+					GotoHitSpeed(224f * -Vector2.UnitY);
+					MoveTowardsX(spring.CenterX, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
 
-					return false;
-				case Spring.Orientations.WallLeft:
-					if (hitSpeed.X <= 60f)
-					{
-						Facing.X = 1f;
-						GotoHitSpeed(280f * Vector2.UnitX);
-						MoveTowardsY(spring.CenterY, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
+				case Spring.Orientations.WallLeft when hitSpeed.X <= 60f:
+					Facing.X = 1f;
+					GotoHitSpeed(280f * Vector2.UnitX);
+					MoveTowardsY(spring.CenterY, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
 
-					return false;
-				case Spring.Orientations.WallRight:
-					if (hitSpeed.X >= -60f)
-					{
-						Facing.X = -1f;
-						GotoHitSpeed(280f * -Vector2.UnitX);
-						MoveTowardsY(spring.CenterY, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
-
-					return false;
+				case Spring.Orientations.WallRight when hitSpeed.X >= -60f:
+					Facing.X = -1f;
+					GotoHitSpeed(280f * -Vector2.UnitX);
+					MoveTowardsY(spring.CenterY, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
 			}
+
+			return false;
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static bool IsFrostHelperCeilingSpring(Spring spring)
+				=> FrostHelper.API.API.IsCeilingSpring(spring);
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static bool IsMaddieHelpingHandCeilingSpring(Spring spring)
+				=> spring is Celeste.Mod.MaxHelpingHand.Entities.NoDashRefillSpring { Orientation: Celeste.Mod.MaxHelpingHand.Entities.NoDashRefillSpring.Orientations.Ceiling };
 		}
 
 		private bool ProximityExplodeCheck()
@@ -832,20 +850,42 @@ namespace vitmod
 		private static void Spring_ctor_Vector2_Orientations_bool(On.Celeste.Spring.orig_ctor_Vector2_Orientations_bool orig, Spring self, Vector2 position, Spring.Orientations orientation, bool playerCanUse)
 		{
 			orig(self, position, orientation, playerCanUse);
-			var collider = new CustomPufferCollider((p) => {
-				if (p.HitSpring(self))
-					self.BounceAnimate();
-			});
-			switch (self.Orientation)
+
+			CustomPufferCollider customPufferCollider = new CustomPufferCollider(OnCustomPuffer);
+			self.Add(customPufferCollider);
+			// the custom puffer collider needs have its collider set in Added so that the hitbox position for modded ceiling springs is picked up correctly
+			self.Add(new OnAddedCallbackComponent(() =>
 			{
-				case Spring.Orientations.Floor:
-					collider.Collider = new Hitbox(16f, 10f, -8f, -10f); break;
-				case Spring.Orientations.WallLeft:
-					collider.Collider = new Hitbox(12f, 16f, 0f, -8f); break;
-				case Spring.Orientations.WallRight:
-					collider.Collider = new Hitbox(12f, 16f, -12f, -8f); break;
+				if (self.Get<PufferCollider>() is { } pufferCollider)
+					customPufferCollider.Collider ??= pufferCollider.Collider.Clone();
+			}));
+
+			return;
+
+			void OnCustomPuffer(CustomPuffer puffer)
+			{
+				if (puffer.HitSpring(self))
+				{
+					if (VitModule.frostHelperLoaded && puffer.version >= 1)
+						puffer.hitSpeed *= GetFrostHelperSpringSpeedMultiplier(self);
+					self.BounceAnimate();
+				}
+
+				return;
+
+				[MethodImpl(MethodImplOptions.NoInlining)]
+				static Vector2 GetFrostHelperSpringSpeedMultiplier(Spring spring)
+					=> FrostHelper.API.API.GetSpringSpeedMultiplier(spring);
 			}
-			self.Add(collider);
+		}
+
+		private class OnAddedCallbackComponent(Action onAdded) : Component(false, false)
+		{
+			public override void EntityAdded(Scene scene)
+			{
+				base.EntityAdded(scene);
+				onAdded.Invoke();
+			}
 		}
 	}
 }
