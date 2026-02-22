@@ -84,15 +84,18 @@ namespace vitmod
 		private bool dashCooldown = false;
 
 		// 0 - original
-		// 1 - frost helper custom spring speed mult support & ceiling spring support
+		// 1 - frost helper custom spring speed mult support & ceiling spring support, no random initial offset on static puffers
 		private int version = 0;
 
-		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish")
+		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish", bool isStatic = false, int version = 0)
 			: base(position)
 		{
-			Collider = new Hitbox(12f, 10f, -6f, -5f);
+			this.version = version;
+
 			Depth = 1;
+			Collider = new Hitbox(12f, 10f, -6f, -5f);
 			Add(new PlayerCollider(OnPlayer, new Hitbox(14f, 12f, -7f, -7f)));
+
 			Add(sprite = GFX.SpriteBank.Create(spriteName));
 			sprite.Play("idle");
 			Add(happySprite = GFX.SpriteBank.Create("crystalline_flccSmileyPuffer"));
@@ -100,13 +103,17 @@ namespace vitmod
 			happySprite.Visible = false;
 			if (!faceRight)
 				Facing.X = -1f;
+
+			this.isStatic = isStatic;
 			idleSine = new SineWave(0.5f, 0f);
-			idleSine.Randomize();
+			if (version < 1 || !isStatic)
+				idleSine.Randomize();
 			Add(idleSine);
 			anchorPosition = Position;
 			Position += new Vector2(idleSine.Value * 3f, idleSine.ValueOverTwo * 2f);
-			State = States.Idle;
 			startPosition = (lastSinePosition = (lastSpeedPosition = Position));
+			State = States.Idle;
+
 			pushRadius = new Circle(radius + 8f);
 			detectRadius = new Circle(radius);
 			breakWallsRadius = new Circle(radius / 2f);
@@ -115,6 +122,7 @@ namespace vitmod
 			this.launchSpeed = launchSpeed;
 			onCollideV = OnCollideV;
 			onCollideH = OnCollideH;
+
 			scale = Vector2.One;
 			bounceWiggler = Wiggler.Create(0.6f, 2.5f, delegate (float v) {
 				sprite.Rotation = v * 20f * ((float)Math.PI / 180f);
@@ -125,14 +133,12 @@ namespace vitmod
 		}
 
 		public CustomPuffer(EntityData data, Vector2 offset, EntityID id)
-			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"))
+			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"), data.Bool("static"), data.Int("version", 0))
 		{
 			ID = id;
 
-			version = data.Int("version", 0);
 			respawnTime = data.Float("respawnTime", 2.5f);
 			alwaysShowOutline = data.Bool("alwaysShowOutline");
-			isStatic = data.Bool("static");
 			pushAny = data.Bool("pushAnyDir");
 			oneUse = data.Bool("oneUse");
 			deathFlag = data.Attr("deathFlag");
