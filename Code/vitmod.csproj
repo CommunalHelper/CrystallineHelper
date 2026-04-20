@@ -30,6 +30,7 @@
         <Reference Include="$(CelestePrefix)\Celeste.dll" Publicize="true" />
         <Reference Include="lib-stripped\FrostTempleHelper.dll" />
         <Reference Include="lib-stripped\VivHelper.dll" />
+        <Reference Include="lib-stripped\MaxHelpingHand.dll" />
     </ItemGroup>
 
     <Choose>

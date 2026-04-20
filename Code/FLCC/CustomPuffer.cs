@@ -6,6 +6,7 @@ using Monocle;
 using MonoMod.Utils;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace vitmod
 {
@@ -22,11 +23,11 @@ namespace vitmod
 		}
 
 		public enum BoostModes
-        {
+		{
 			SetSpeed,
 			RedirectSpeed,
 			AddRedirectSpeed
-        }
+		}
 
 		public Holdable Hold;
 		public EntityID ID;
@@ -75,42 +76,53 @@ namespace vitmod
 		private Color outlineColor = Color.White;
 		private bool canUpdateHome = false;
 		private bool holdFlip = false;
-        private bool legacyBoost = true;
-        private bool absoluteVector = false;
-        private bool launchState = true;
-        private bool tangible = true;
-        private bool renderEye = true;
+		private bool legacyBoost = true;
+		private bool absoluteVector = false;
+		private bool launchState = true;
+		private bool tangible = true;
+		private bool renderEye = true;
+		private bool dashCooldown = false;
 
-		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish")
+		// 0 - original
+		// 1 - frost helper custom spring speed mult support & ceiling spring support, no random initial offset on static puffers
+		private int version = 0;
+
+		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish", bool isStatic = false, int version = 0)
 			: base(position)
 		{
-			Collider = new Hitbox(12f, 10f, -6f, -5f);
+			this.version = version;
+
 			Depth = 1;
+			Collider = new Hitbox(12f, 10f, -6f, -5f);
 			Add(new PlayerCollider(OnPlayer, new Hitbox(14f, 12f, -7f, -7f)));
+
 			Add(sprite = GFX.SpriteBank.Create(spriteName));
 			sprite.Play("idle");
 			Add(happySprite = GFX.SpriteBank.Create("crystalline_flccSmileyPuffer"));
 			happySprite.Play("idle");
 			happySprite.Visible = false;
 			if (!faceRight)
-			{
 				Facing.X = -1f;
-			}
+
+			this.isStatic = isStatic;
 			idleSine = new SineWave(0.5f, 0f);
-			idleSine.Randomize();
+			if (version < 1 || !isStatic)
+				idleSine.Randomize();
 			Add(idleSine);
 			anchorPosition = Position;
 			Position += new Vector2(idleSine.Value * 3f, idleSine.ValueOverTwo * 2f);
-			State = States.Idle;
 			startPosition = (lastSinePosition = (lastSpeedPosition = Position));
+			State = States.Idle;
+
 			pushRadius = new Circle(radius + 8f);
 			detectRadius = new Circle(radius);
 			breakWallsRadius = new Circle(radius / 2f);
 			blastRadius = radius;
-			blastAngle =  WrapAngle(angle.ToRad());
+			blastAngle = WrapAngle(angle.ToRad());
 			this.launchSpeed = launchSpeed;
 			onCollideV = OnCollideV;
 			onCollideH = OnCollideH;
+
 			scale = Vector2.One;
 			bounceWiggler = Wiggler.Create(0.6f, 2.5f, delegate (float v) {
 				sprite.Rotation = v * 20f * ((float)Math.PI / 180f);
@@ -121,13 +133,12 @@ namespace vitmod
 		}
 
 		public CustomPuffer(EntityData data, Vector2 offset, EntityID id)
-			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"))
+			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"), data.Bool("static"), data.Int("version", 0))
 		{
 			ID = id;
 
 			respawnTime = data.Float("respawnTime", 2.5f);
 			alwaysShowOutline = data.Bool("alwaysShowOutline");
-			isStatic = data.Bool("static");
 			pushAny = data.Bool("pushAnyDir");
 			oneUse = data.Bool("oneUse");
 			deathFlag = data.Attr("deathFlag");
@@ -135,12 +146,12 @@ namespace vitmod
 			canUpdateHome = !data.Bool("returnToStart", true);
 			holdFlip = data.Bool("holdFlip");
 			boostMode = data.Enum("boostMode", BoostModes.SetSpeed);
-            legacyBoost = data.Bool("legacyBoost", true);
-            absoluteVector = data.Bool("absoluteVector", false);
-            launchState = data.Bool("setLaunchState", true);
-            tangible=data.Bool("tangible", true);
-            renderEye = data.Bool("renderEye", true);
-
+			legacyBoost = data.Bool("legacyBoost", true);
+			absoluteVector = data.Bool("absoluteVector", false);
+			launchState = data.Bool("setLaunchState", true);
+			tangible = data.Bool("tangible", true);
+			renderEye = data.Bool("renderEye", true);
+			dashCooldown = data.Bool("dashCooldown", false);
 
 			if (data.Bool("holdable"))
 			{
@@ -163,12 +174,14 @@ namespace vitmod
 		public override void Added(Scene scene)
 		{
 			base.Added(scene);
+
 			if ((scene as Level).Session.GetFlag("pufferishappy"))
 			{
 				isHappy = true;
 				sprite.Visible = false;
 				happySprite.Visible = true;
 			}
+
 			foreach (CustomPuffer puffer in scene.Tracker.GetEntities<CustomPuffer>())
 			{
 				if (puffer != this && puffer.ID.Key == ID.Key && puffer.Hold.IsHeld)
@@ -196,7 +209,7 @@ namespace vitmod
 
 			if (holdFlip)
 			{
-				var playerFacing = (float)Hold.Holder.Facing;
+				float playerFacing = (float)Hold.Holder.Facing;
 				if ((sameFace && playerFacing != Facing.X) || (!sameFace && playerFacing == Facing.X))
 				{
 					blastAngle = WrapAngle(-blastAngle);
@@ -218,8 +231,10 @@ namespace vitmod
 		private void OnRelease(Vector2 force)
 		{
 			RemoveTag(Tags.Persistent);
+
 			if (canUpdateHome)
 				needsNewHome = true;
+
 			if (force != Vector2.Zero)
 			{
 				GotoHitSpeed(force * new Vector2(240f, 200f));
@@ -232,7 +247,7 @@ namespace vitmod
 
 				if (holder != null)
 				{
-					var deg = WrapAngle(blastAngle + (45f).ToRad()).ToDeg() - 45f;
+					float deg = WrapAngle(blastAngle + (45f).ToRad()).ToDeg() - 45f;
 					if (!pushAny && !(deg >= 135f && deg <= 225f))
 					{
 						anchorPosition = (Position += Vector2.UnitY * 8f);
@@ -261,6 +276,7 @@ namespace vitmod
 					}*/
 				}
 			}
+
 			holder = null;
 		}
 
@@ -277,10 +293,9 @@ namespace vitmod
 
 		private void OnCollideV(CollisionData data)
 		{
-			if (!(data.Direction.Y > 0f))
-			{
+			if (data.Direction.Y <= 0f)
 				return;
-			}
+
 			for (int i = -1; i <= 1; i += 2)
 			{
 				for (int j = 1; j <= 2; j++)
@@ -293,6 +308,7 @@ namespace vitmod
 					}
 				}
 			}
+
 			hitSpeed.Y *= -0.2f;
 		}
 
@@ -314,19 +330,20 @@ namespace vitmod
 		private void GotoHit(Vector2 from, float deg = 0f)
 		{
 			scale = new Vector2(1.2f, 0.8f);
+
 			if (deg >= -45f && deg <= 45f)
-			{ // top open
+				// hit from top
 				hitSpeed = Vector2.UnitY * 200f;
-			} else if (deg >= 135f && deg <= 225f)
-			{ // bottom open
+			else if (deg >= 135f && deg <= 225f)
+				// hit from bottom
 				hitSpeed = Vector2.UnitY * -150f;
-			} else if (deg < 180f)
-			{ // right open
+			else if (deg < 180f)
+				// hit from right
 				hitSpeed = Vector2.UnitX * -200f;
-			} else
-			{
+			else
+				// hit from left
 				hitSpeed = Vector2.UnitX * 200f;
-			}
+
 			State = States.Hit;
 			bounceWiggler.Start();
 			Alert(restart: true, playSfx: false);
@@ -345,21 +362,14 @@ namespace vitmod
 			if ((startPosition - Position).LengthSquared() > 100f)
 			{
 				if (Math.Abs(Position.Y - startPosition.Y) > Math.Abs(Position.X - startPosition.X))
-				{
 					if (Position.X > startPosition.X)
-					{
 						control += Vector2.UnitX * -24f;
-					} else
-					{
+					else
 						control += Vector2.UnitX * 24f;
-					}
-				} else if (Position.Y > startPosition.Y)
-				{
+				else if (Position.Y > startPosition.Y)
 					control += Vector2.UnitY * -24f;
-				} else
-				{
+				else
 					control += Vector2.UnitY * 24f;
-				}
 			}
 			returnCurve = new SimpleCurve(Position, startPosition, control);
 			Collidable = false;
@@ -394,7 +404,7 @@ namespace vitmod
 				if (CollideCheck(entity))
 					entity.TurnOn();
 
-			foreach (FloatingDebris entity in base.Scene.Tracker.GetEntities<FloatingDebris>())
+			foreach (FloatingDebris entity in Scene.Tracker.GetEntities<FloatingDebris>())
 				if (CollideCheck(entity))
 					entity.OnExplode(Position);
 
@@ -404,10 +414,10 @@ namespace vitmod
 			level.Displacement.AddBurst(Position, 0.4f, 12f, 36f, 0.5f);
 			level.Displacement.AddBurst(Position, 0.4f, 24f, 48f, 0.5f);
 			level.Displacement.AddBurst(Position, 0.4f, 36f, 60f, 0.5f);
-			for (float num = 0f; num < (float)Math.PI * 2f; num += 0.17453292f)
+			for (float angle = 0f; angle < (float)Math.PI * 2f; angle += (float)(Math.PI / 18))
 			{
-				Vector2 position = base.Center + Calc.AngleToVector(num + Calc.Random.Range(-(float)Math.PI / 90f, (float)Math.PI / 90f), Calc.Random.Range(12, 18));
-				level.Particles.Emit(Seeker.P_Regen, position, num);
+				Vector2 position = base.Center + Calc.AngleToVector(angle + Calc.Random.Range(-(float)Math.PI / 90f, (float)Math.PI / 90f), Calc.Random.Range(12, 18));
+				level.Particles.Emit(Seeker.P_Regen, position, angle);
 			}
 
 			if (needsNewHome)
@@ -420,9 +430,7 @@ namespace vitmod
 				level.Session.SetFlag(deathFlag);
 
 			if (oneUse)
-			{
 				RemoveSelf();
-			}
 		}
 
 		public override void Render()
@@ -435,109 +443,98 @@ namespace vitmod
 			happySprite.Scale = sprite.Scale;
 			happySprite.Rotation = sprite.Rotation;
 
-			bool flag = false;
+			bool drawSpriteOutline = false;
 			if (sprite.CurrentAnimationID != "hidden" && sprite.CurrentAnimationID != "explode" && sprite.CurrentAnimationID != "recover")
-			{
-				flag = true;
-			} else if (sprite.CurrentAnimationID == "explode" && sprite.CurrentAnimationFrame <= 1)
-			{
-				flag = true;
-			} else if (sprite.CurrentAnimationID == "recover" && sprite.CurrentAnimationFrame >= 4)
-			{
-				flag = true;
-			}
-			if (flag)
-			{
+				drawSpriteOutline = true;
+			else if (sprite.CurrentAnimationID == "explode" && sprite.CurrentAnimationFrame <= 1)
+				drawSpriteOutline = true;
+			else if (sprite.CurrentAnimationID == "recover" && sprite.CurrentAnimationFrame >= 4)
+				drawSpriteOutline = true;
+			if (drawSpriteOutline)
 				(isHappy ? happySprite : sprite).DrawSimpleOutline();
-			}
-			float num = playerAliveFade * Calc.ClampedMap((Position - lastPlayerPos).Length(), 128f, 96f);
-			if ((num > 0f || alwaysShowOutline) && State != States.Gone && State != States.Held)
+
+			float outlineAlpha = playerAliveFade * Calc.ClampedMap((Position - lastPlayerPos).Length(), 128f, 96f);
+			if ((outlineAlpha > 0f || alwaysShowOutline) && State != States.Gone && State != States.Held)
 			{
-				Vector2 value = lastPlayerPos;
-				value.Y += value.Y - base.Y;
-				value.X += value.X - base.X;
-				float radiansB = (value - Position).Angle();
+				Vector2 highlightPos = lastPlayerPos;
+				highlightPos.Y += highlightPos.Y - base.Y;
+				highlightPos.X += highlightPos.X - base.X;
+				float highlightAngle = (highlightPos - Position).Angle();
 				int segments = (int)blastRadius - 4;
 				for (int i = 0; i < segments; i++)
 				{
-					float num2 = (float)Math.Sin(base.Scene.TimeActive * 0.5f) * 0.02f;
-					if (isStatic)
-					{
-						num2 = 0.01f;
-					}
-					float num3 = Calc.Map((float)i / (float)segments + num2, 0f, 1f, 0, (float)Math.PI);
-					num3 += bounceWiggler.Value * 20f * ((float)Math.PI / 180f) + blastAngle;
-					Vector2 value2 = Calc.AngleToVector(num3, 1f);
-					Vector2 vector = Position + value2 * blastRadius;
-					float t = 1f;
+					float segmentAngleWobble = isStatic ? 0.01f : (float)Math.Sin(Scene.TimeActive * 0.5f) * 0.02f;
+					float segmentAngle = Calc.Map((float)i / (float)segments + segmentAngleWobble, 0f, 1f, 0, (float)Math.PI);
+					segmentAngle += bounceWiggler.Value * 20f * ((float)Math.PI / 180f) + blastAngle;
+					Vector2 segmentDirection = Calc.AngleToVector(segmentAngle, 1f);
+					Vector2 segmentPosition = Position + segmentDirection * blastRadius;
+
+					float segmentAlpha = 1f;
 					if (!alwaysShowOutline)
 					{
-						t = Calc.ClampedMap(Calc.AbsAngleDiff(num3, radiansB), (float)Math.PI / 2f, 0.17453292f);
-						t = Ease.CubeOut(t) * 0.8f * num;
+						segmentAlpha = Calc.ClampedMap(Calc.AbsAngleDiff(segmentAngle, highlightAngle), (float)Math.PI / 2f, (float)(Math.PI / 18));
+						segmentAlpha = Ease.CubeOut(segmentAlpha) * 0.8f * outlineAlpha;
+						if (segmentAlpha <= 0f)
+							continue;
 					}
-					if (t <= 0f)
+
+					if (i == 0 || i == segments - 1)
 					{
+						Draw.Line(segmentPosition, segmentPosition - segmentDirection * (blastRadius - 12f), outlineColor * segmentAlpha);
 						continue;
 					}
-					if (i == 0 || i == segments-1)
-					{
-						Draw.Line(vector, vector - value2 * (blastRadius-12f), outlineColor * t);
-						continue;
-					}
-					Vector2 vector2 = value2 * (float)Math.Sin(base.Scene.TimeActive * 2f + (float)i * 0.6f);
+
+					Vector2 segmentPositionWobble = segmentDirection * (float)Math.Sin(Scene.TimeActive * 2f + i * 0.6f);
 					if (i % 2 == 0)
-					{
-						vector2 *= -1f;
-					}
-					vector += vector2;
-					if (Calc.AbsAngleDiff(num3, radiansB) <= 0.17453292f)
-					{
-						Draw.Line(vector, vector - value2 * 3f, outlineColor * t);
-					} else
-					{
-						Draw.Point(vector, outlineColor * t);
-					}
+						segmentPositionWobble *= -1f;
+					segmentPosition += segmentPositionWobble;
+
+					if (Calc.AbsAngleDiff(segmentAngle, highlightAngle) <= (float)(Math.PI / 18))
+						Draw.Line(segmentPosition, segmentPosition - segmentDirection * 3f, outlineColor * segmentAlpha);
+					else
+						Draw.Point(segmentPosition, outlineColor * segmentAlpha);
 				}
 			}
+
 			base.Render();
+
 			if (renderEye && !isHappy && sprite.CurrentAnimationID == "alerted")
 			{
-				Vector2 vector3 = Position + new Vector2(3f, (Facing.X < 0f) ? (-5) : (-4)) * sprite.Scale;
-				Vector2 to = lastPlayerPos + new Vector2(0f, -4f);
-				float angleRadians = Calc.Angle(vector3, to) + eyeSpin * ((float)Math.PI * 2f) * 2f;
-				Vector2 vector4 = Calc.AngleToVector(angleRadians, 1f);
-				Vector2 vector5 = vector3 + new Vector2((float)Math.Round(vector4.X), (float)Math.Round(Calc.ClampedMap(vector4.Y, -1f, 1f, -1f, 2f)));
-				Draw.Rect(vector5.X, vector5.Y, 1f, 1f, Color.Black);
+				Vector2 eyeOrigin = Position + new Vector2(3f, (Facing.X < 0f) ? (-5) : (-4)) * sprite.Scale;
+				Vector2 lookTowards = lastPlayerPos + new Vector2(0f, -4f);
+				float eyeAngle = Calc.Angle(eyeOrigin, lookTowards) + eyeSpin * ((float)Math.PI * 2f) * 2f;
+				Vector2 eyeDirection = Calc.AngleToVector(eyeAngle, 1f);
+				Vector2 eyePosition = eyeOrigin + new Vector2((float)Math.Round(eyeDirection.X), (float)Math.Round(Calc.ClampedMap(eyeDirection.Y, -1f, 1f, -1f, 2f)));
+				Draw.Rect(eyePosition.X, eyePosition.Y, 1f, 1f, Color.Black);
 			}
+
 			sprite.Scale /= Facing;
 		}
 
 		public override void Update()
 		{
 			base.Update();
+
 			eyeSpin = Calc.Approach(eyeSpin, 0f, Engine.DeltaTime * 1.5f);
 			scale = Calc.Approach(scale, Vector2.One, 1f * Engine.DeltaTime);
 			if (cannotHitTimer > 0f)
-			{
 				cannotHitTimer -= Engine.DeltaTime;
-			}
 			if (State != States.Gone && cantExplodeTimer > 0f)
-			{
 				cantExplodeTimer -= Engine.DeltaTime;
-			}
 			if (alertTimer > 0f)
-			{
 				alertTimer -= Engine.DeltaTime;
-			}
-			Player entity = base.Scene.Tracker.GetEntity<Player>();
-			if (entity == null)
-			{
-				playerAliveFade = Calc.Approach(playerAliveFade, 0f, 1f * Engine.DeltaTime);
-			} else
+
+			Player player = Scene.Tracker.GetEntity<Player>();
+			if (player != null)
 			{
 				playerAliveFade = Calc.Approach(playerAliveFade, 1f, 1f * Engine.DeltaTime);
-				lastPlayerPos = entity.Center;
+				lastPlayerPos = player.Center;
 			}
+			else
+			{
+				playerAliveFade = Calc.Approach(playerAliveFade, 0f, 1f * Engine.DeltaTime);
+			}
+
 			if (!isHappy && SceneAs<Level>().Session.GetFlag("pufferishappy"))
 			{
 				isHappy = true;
@@ -550,19 +547,19 @@ namespace vitmod
 				sprite.Visible = true;
 				happySprite.Visible = false;
 			}
+
 			switch (State)
 			{
 				case States.Idle:
-				{
 					if (Position != lastSinePosition)
 					{
 						anchorPosition += Position - lastSinePosition;
 					}
 					if (!isStatic)
 					{
-						Vector2 vector = anchorPosition + new Vector2(idleSine.Value * 3f, idleSine.ValueOverTwo * 2f);
-						MoveToX(vector.X);
-						MoveToY(vector.Y);
+						Vector2 position = anchorPosition + new Vector2(idleSine.Value * 3f, idleSine.ValueOverTwo * 2f);
+						MoveToX(position.X);
+						MoveToY(position.Y);
 					}
 					lastSinePosition = Position;
 					if (needsNewHome)
@@ -570,6 +567,7 @@ namespace vitmod
 						needsNewHome = false;
 						startPosition = anchorPosition;
 					}
+
 					if (ProximityExplodeCheck())
 					{
 						Explode();
@@ -579,20 +577,21 @@ namespace vitmod
 					if (AlertedCheck())
 					{
 						Alert(restart: false, playSfx: true);
-					} else if (sprite.CurrentAnimationID == "alerted" && alertTimer <= 0f)
+					}
+					else if (sprite.CurrentAnimationID == "alerted" && alertTimer <= 0f)
 					{
 						Audio.Play("event:/new_content/game/10_farewell/puffer_shrink", Position);
 						sprite.Play("unalert");
 					}
-					foreach (CustomPufferCollider component in base.Scene.Tracker.GetComponents<CustomPufferCollider>())
-					{
+
+					foreach (CustomPufferCollider component in Scene.Tracker.GetComponents<CustomPufferCollider>())
 						component.Check(this);
-					}
+
 					break;
-				}
 				case States.Held:
 					if (sprite.CurrentAnimationID != "alerted")
 						Alert(restart: false, playSfx: true);
+
 					break;
 				case States.Hit:
 					lastSpeedPosition = Position;
@@ -603,39 +602,38 @@ namespace vitmod
 					hitSpeed = Calc.Approach(hitSpeed, Vector2.Zero, 320f * Engine.DeltaTime);
 					if (canUpdateHome)
 						needsNewHome = true;
+
 					if (ProximityExplodeCheck())
 					{
 						Explode();
 						GotoGone();
 						break;
 					}
-					if (base.Top >= (float)(SceneAs<Level>().Bounds.Bottom + 5))
+					if (base.Top >= SceneAs<Level>().Bounds.Bottom + 5)
 					{
 						sprite.Play("hidden");
 						GotoGone();
 						break;
 					}
-					foreach (CustomPufferCollider component2 in base.Scene.Tracker.GetComponents<CustomPufferCollider>())
-					{
-						component2.Check(this);
-					}
+
+					foreach (CustomPufferCollider component in Scene.Tracker.GetComponents<CustomPufferCollider>())
+						component.Check(this);
+
 					if (hitSpeed == Vector2.Zero)
 					{
 						ZeroRemainderX();
 						ZeroRemainderY();
 						GotoIdle();
 					}
+
 					break;
 				case States.Gone:
-				{
-					float num = goneTimer;
+					float prevGoneTimer = goneTimer;
 					goneTimer -= Engine.DeltaTime;
 					if (goneTimer <= 0.5f)
 					{
-						if (num > 0.5f && returnCurve.GetLengthParametric(8) > 8f)
-						{
+						if (prevGoneTimer > 0.5f && returnCurve.GetLengthParametric(8) > 8f)
 							Audio.Play("event:/new_content/game/10_farewell/puffer_return", Position);
-						}
 						Position = returnCurve.GetPoint(Ease.CubeInOut(Calc.ClampedMap(goneTimer, 0.5f, 0f)));
 					}
 					if (goneTimer <= 0f)
@@ -643,56 +641,70 @@ namespace vitmod
 						Visible = (Collidable = true);
 						GotoIdle();
 					}
+
 					break;
-				}
 			}
 		}
 
 		public bool HitSpring(Spring spring)
 		{
+			// handle ceiling springs
+			if (version >= 1 && ((VitModule.frostHelperLoaded && IsFrostHelperCeilingSpring(spring)) || (VitModule.maddieHelpingHandLoaded && IsMaddieHelpingHandCeilingSpring(spring))))
+			{
+				if (hitSpeed.Y <= 0f)
+				{
+					GotoHitSpeed(224f * Vector2.UnitY);
+					MoveTowardsX(spring.CenterX, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
+				}
+
+				return false;
+			}
+
 			switch (spring.Orientation)
 			{
-				default:
-					if (hitSpeed.Y >= 0f)
-					{
-						GotoHitSpeed(224f * -Vector2.UnitY);
-						MoveTowardsX(spring.CenterX, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
-					return false;
-				case Spring.Orientations.WallLeft:
-					if (hitSpeed.X <= 60f)
-					{
-						Facing.X = 1f;
-						GotoHitSpeed(280f * Vector2.UnitX);
-						MoveTowardsY(spring.CenterY, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
-					return false;
-				case Spring.Orientations.WallRight:
-					if (hitSpeed.X >= -60f)
-					{
-						Facing.X = -1f;
-						GotoHitSpeed(280f * -Vector2.UnitX);
-						MoveTowardsY(spring.CenterY, 4f);
-						bounceWiggler.Start();
-						Alert(restart: true, playSfx: false);
-						return true;
-					}
-					return false;
+				case Spring.Orientations.Floor when hitSpeed.Y >= 0f:
+					GotoHitSpeed(224f * -Vector2.UnitY);
+					MoveTowardsX(spring.CenterX, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
+
+				case Spring.Orientations.WallLeft when hitSpeed.X <= 60f:
+					Facing.X = 1f;
+					GotoHitSpeed(280f * Vector2.UnitX);
+					MoveTowardsY(spring.CenterY, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
+
+				case Spring.Orientations.WallRight when hitSpeed.X >= -60f:
+					Facing.X = -1f;
+					GotoHitSpeed(280f * -Vector2.UnitX);
+					MoveTowardsY(spring.CenterY, 4f);
+					bounceWiggler.Start();
+					Alert(restart: true, playSfx: false);
+					return true;
 			}
+
+			return false;
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static bool IsFrostHelperCeilingSpring(Spring spring)
+				=> FrostHelper.API.API.IsCeilingSpring(spring);
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static bool IsMaddieHelpingHandCeilingSpring(Spring spring)
+				=> spring is Celeste.Mod.MaxHelpingHand.Entities.NoDashRefillSpring { Orientation: Celeste.Mod.MaxHelpingHand.Entities.NoDashRefillSpring.Orientations.Ceiling };
 		}
 
 		private bool ProximityExplodeCheck()
 		{
 			if (cantExplodeTimer > 0f || blastRadius == 0f)
-			{
 				return false;
-			}
+
 			bool result = false;
 			Collider collider = base.Collider;
 			base.Collider = detectRadius;
@@ -700,10 +712,8 @@ namespace vitmod
 			if (player != null)
 			{
 				float angle = (player.Center - Center).Angle();
-				if (WrapAngle(angle - blastAngle) >= 0 && WrapAngle(angle - blastAngle) < Math.PI && !base.Scene.CollideCheck<Solid>(Position, player.Center))
-				{
+				if (WrapAngle(angle - blastAngle) >= 0 && WrapAngle(angle - blastAngle) < Math.PI && !Scene.CollideCheck<Solid>(Position, player.Center))
 					result = true;
-				}
 			}
 			base.Collider = collider;
 			return result;
@@ -711,8 +721,8 @@ namespace vitmod
 
 		private bool AlertedCheck()
 		{
-			Player entity = base.Scene.Tracker.GetEntity<Player>();
-			return entity != null && (entity.Center - base.Center).Length() < blastRadius * 2f;
+			Player player = Scene.Tracker.GetEntity<Player>();
+			return player != null && (player.Center - base.Center).Length() < blastRadius * 2f;
 		}
 
 		private void Alert(bool restart, bool playSfx)
@@ -736,30 +746,27 @@ namespace vitmod
 		private void OnPlayer(Player player)
 		{
 			if (State == States.Gone || State == States.Held || !(cantExplodeTimer <= 0f) || !tangible)
-			{
 				return;
-			}
+
 			if (Hold != null && Input.Grab.Check && !player.Ducking && !player.IsTired && (player.Holding == null))
 				return;
+
 			if (cannotHitTimer <= 0f)
 			{
 				Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
-				float baseAngle = blastAngle;
-				if (pushAny)
-				{
-					baseAngle = (Center - player.Center).Angle() - (float)Math.PI/2;
-				}
-				float deg = WrapAngle(baseAngle + (45f).ToRad()).ToDeg() - 45f;
-				if (deg >= -45f && deg <= 45f)
+
+				float baseAngleRad = pushAny ? (Center - player.Center).Angle() - (float)Math.PI / 2f : blastAngle;
+				float hitAngleDeg = WrapAngle(baseAngleRad + (45f).ToRad()).ToDeg() - 45f;
+				if (hitAngleDeg >= -45f && hitAngleDeg <= 45f)
 				{
 					player.Bounce(Top);
 				}
-				else if (deg >= 135f && deg <= 225f)
+				else if (hitAngleDeg >= 135f && hitAngleDeg <= 225f)
 				{
 					player.MoveV(3);
 					player.ReflectBounce(Vector2.UnitY);
 				}
-				else if (deg < 180f)
+				else if (hitAngleDeg < 180f)
 				{
 					player.SideBounce(1, Right, CenterY);
 				}
@@ -767,7 +774,8 @@ namespace vitmod
 				{
 					player.SideBounce(-1, Left, CenterY);
 				}
-				GotoHit(player.Center, deg);
+
+				GotoHit(player.Center, hitAngleDeg);
 				MoveToX(anchorPosition.X);
 				idleSine.Reset();
 				anchorPosition = (lastSinePosition = Position);
@@ -780,65 +788,60 @@ namespace vitmod
 		{
 			Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
 			Celeste.Celeste.Freeze(0.1f);
-			//player.launchApproachX = null;
-			Vector2 vector = (player.Center - Position).SafeNormalize(-Vector2.UnitY);
-			Vector2 sideVector = Calc.AngleToVector(blastAngle, 1f);
-			float num = Vector2.Dot(vector, sideVector);
+			// player.launchApproachX = null;
+			Vector2 playerDirection = (player.Center - Position).SafeNormalize(-Vector2.UnitY);
+			Vector2 launchDirection = Calc.AngleToVector(blastAngle, 1f);
+			float dot = Vector2.Dot(playerDirection, launchDirection);
+			launchDirection *= Math.Sign(dot);
 
-			sideVector *= Math.Sign(num);
-			float oldSpeed = Math.Abs(player.Speed.X);
-            if (absoluteVector) {
-                oldSpeed = player.Speed.Length();
-            }
-
+			float oldSpeed = absoluteVector ? player.Speed.Length() : Math.Abs(player.Speed.X);
 			if (boostMode == BoostModes.RedirectSpeed)
-            {
-				player.Speed = oldSpeed * sideVector;
-            }
-            else
-            {
-				player.Speed = launchSpeed * sideVector;
-				if (boostMode == BoostModes.AddRedirectSpeed)
-				{
-					player.Speed += oldSpeed * sideVector;
-				}
+			{
+				player.Speed = oldSpeed * launchDirection;
 			}
+			else
+			{
+				player.Speed = launchSpeed * launchDirection;
+				if (boostMode == BoostModes.AddRedirectSpeed)
+					player.Speed += oldSpeed * launchDirection;
+			}
+
 			if (player.Speed.Y <= 50f)
 			{
 				player.Speed.Y = Math.Min(Math.Max(-150f, -Math.Abs(launchSpeed)), player.Speed.Y);
 				player.AutoJump = true;
 			}
+
 			if (Input.MoveX.Value == Math.Sign(player.Speed.X))
 			{
-                player.explodeLaunchBoostTimer = 0f;
-                player.Speed.X *= 1.2f;
-            } else if (!legacyBoost) {
-                // not sure why, but this doesn't work if we use 0.01f the same way the vanilla puffer does
-                player.explodeLaunchBoostTimer = 0.02f;
-                player.explodeLaunchBoostSpeed = player.Speed.X * 1.2f;
-            }
-			SlashFx.Burst(player.Center, player.Speed.Angle());
-			if (!player.Inventory.NoRefills)
-			{
-				player.RefillDash();
+				player.explodeLaunchBoostTimer = 0f;
+				player.Speed.X *= 1.2f;
 			}
+			else if (!legacyBoost)
+			{
+				// not sure why, but this doesn't work if we use 0.01f the same way the vanilla puffer does
+				player.explodeLaunchBoostTimer = 0.02f;
+				player.explodeLaunchBoostSpeed = player.Speed.X * 1.2f;
+			}
+
+			SlashFx.Burst(player.Center, player.Speed.Angle());
+
+			if (!player.Inventory.NoRefills)
+				player.RefillDash();
 			player.RefillStamina();
-            //player.dashCooldownTimer = 0.2f;
-            player.StateMachine.State = Player.StLaunch;
-            return vector;
+			if (dashCooldown)
+				player.dashCooldownTimer = 0.2f;
+			player.StateMachine.State = Player.StLaunch;
+			return playerDirection;
 		}
 
 		private static float WrapAngle(float angle)
 		{
-			angle %= (float)Math.PI*2f;
+			angle %= (float)Math.PI * 2f;
 			if (angle < 0)
-			{
-				angle += (float)Math.PI*2f;
-			}
+				angle += (float)Math.PI * 2f;
 			return angle;
 		}
-
-		private static MethodInfo springBounceAnimate = typeof(Spring).GetMethod("BounceAnimate", BindingFlags.Instance | BindingFlags.NonPublic);
 
 		public static void Load()
 		{
@@ -853,22 +856,42 @@ namespace vitmod
 		private static void Spring_ctor_Vector2_Orientations_bool(On.Celeste.Spring.orig_ctor_Vector2_Orientations_bool orig, Spring self, Vector2 position, Spring.Orientations orientation, bool playerCanUse)
 		{
 			orig(self, position, orientation, playerCanUse);
-			var collider = new CustomPufferCollider((p) => {
-				if (p.HitSpring(self))
-				{
-					springBounceAnimate.Invoke(self, new object[] { });
-				}
-			});
-			switch (self.Orientation)
+
+			CustomPufferCollider customPufferCollider = new CustomPufferCollider(OnCustomPuffer);
+			self.Add(customPufferCollider);
+			// the custom puffer collider needs have its collider set in Added so that the hitbox position for modded ceiling springs is picked up correctly
+			self.Add(new OnAddedCallbackComponent(() =>
 			{
-				case Spring.Orientations.Floor:
-					collider.Collider = new Hitbox(16f, 10f, -8f, -10f); break;
-				case Spring.Orientations.WallLeft:
-					collider.Collider = new Hitbox(12f, 16f, 0f, -8f); break;
-				case Spring.Orientations.WallRight:
-					collider.Collider = new Hitbox(12f, 16f, -12f, -8f); break;
+				if (self.Get<PufferCollider>() is { } pufferCollider)
+					customPufferCollider.Collider ??= pufferCollider.Collider.Clone();
+			}));
+
+			return;
+
+			void OnCustomPuffer(CustomPuffer puffer)
+			{
+				if (puffer.HitSpring(self))
+				{
+					if (VitModule.frostHelperLoaded && puffer.version >= 1)
+						puffer.hitSpeed *= GetFrostHelperSpringSpeedMultiplier(self);
+					self.BounceAnimate();
+				}
+
+				return;
+
+				[MethodImpl(MethodImplOptions.NoInlining)]
+				static Vector2 GetFrostHelperSpringSpeedMultiplier(Spring spring)
+					=> FrostHelper.API.API.GetSpringSpeedMultiplier(spring);
 			}
-			self.Add(collider);
+		}
+
+		private class OnAddedCallbackComponent(Action onAdded) : Component(false, false)
+		{
+			public override void EntityAdded(Scene scene)
+			{
+				base.EntityAdded(scene);
+				onAdded.Invoke();
+			}
 		}
 	}
 }

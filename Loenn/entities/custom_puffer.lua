@@ -25,6 +25,8 @@ customPuffer.placements = {
             absoluteVector = false,
             tangible = true,
             renderEye = true,
+            dashCooldown = true,
+            version = 1,
         }
     },
     {
@@ -50,6 +52,8 @@ customPuffer.placements = {
             absoluteVector = false,
             tangible = true,
             renderEye = true,
+            dashCooldown = true,
+            version = 1,
         }
     }
 }
@@ -67,9 +71,12 @@ customPuffer.fieldInformation = {
             ["Redirect Speed"] = "RedirectSpeed",
             ["Redirect + Add Speed"] = "AddRedirectSpeed",
         }
+    },
+    version = {
+        fieldType = "integer"
     }
 }
-
+customPuffer.ignoredFields = { "_id", "_name", "version" }
 customPuffer.depth = 0
 customPuffer.texture = "objects/puffer/idle00"
 
