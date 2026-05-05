@@ -245,6 +245,7 @@ entities.vitellary/customheart.attributes.description.poemCutscene=Whether the h
 # Custom Moving Touch Switch
 entities.vitellary/customtouchswitch.attributes.description.flag=The session flag this touch switch sets. Give the same to multiple touch switches and switch gates to group them.
 entities.vitellary/customtouchswitch.attributes.description.icon=The name of the icon for the touch switch (relative to objects/customMovingTouchSwitch), or "vanilla" for the default one.
+entities.vitellary/customtouchswitch.attributes.description.border=The border of the touch switch (relative to objects/customMovingTouchSwitch), or "vanilla" for the default one.
 entities.vitellary/customtouchswitch.attributes.description.persistent=If enabled, the touch switch will stay active when the player dies or changes rooms.
 entities.vitellary/customtouchswitch.attributes.description.inactiveColor=The switch colour when not triggered yet.
 entities.vitellary/customtouchswitch.attributes.description.movingColor=The switch colour while moving to the next node.
