@@ -1,0 +1,449 @@
+mods.vitellary.name=Crystalline
+mods.CrystallineHelper.name=Crystalline
+
+# - Placement names -
+
+# Entities
+
+entities.vitellary/boostbumper.placements.name.boost_bumper=Boost Bumper
+entities.vitellary/fillcrystal.placements.name.fill_crystal=Fill Crystal
+entities.vitellary/customprologuebridge.placements.name.custom_prologue_bridge=Custom Prologue Bridge
+entities.vitellary/fillcrystal.placements.name.fill_crystal=Fill Crystal
+entities.vitellary/flagsequencecontroller.placements.name.flag_sequence_controller=Flag Sequence Controller
+entities.vitellary/forcedashcrystal.placements.name.up=Force Dash Crystal (Up)
+entities.vitellary/forcedashcrystal.placements.name.upright=Force Dash Crystal (Up Right)
+entities.vitellary/forcedashcrystal.placements.name.right=Force Dash Crystal (Right)
+entities.vitellary/forcedashcrystal.placements.name.downright=Force Dash Crystal (Down Right)
+entities.vitellary/forcedashcrystal.placements.name.down=Force Dash Crystal (Down)
+entities.vitellary/forcedashcrystal.placements.name.downleft=Force Dash Crystal (Down Left)
+entities.vitellary/forcedashcrystal.placements.name.left=Force Dash Crystal (Left)
+entities.vitellary/forcedashcrystal.placements.name.upleft=Force Dash Crystal (Up Left)
+entities.vitellary/forcedashcrystal.placements.name.none=Force Dash Crystal (None)
+entities.vitellary/forcejumpcrystal.placements.name.force_jump_crystal=Force Jump Crystal
+entities.vitellary/keyberry.placements.name.normal=Keyberry
+entities.vitellary/keyberry.placements.name.winged=Keyberry (Winged)
+entities.vitellary/returnkeyberry.placements.name.normal=Keyberry With Return
+entities.vitellary/returnkeyberry.placements.name.winged=Keyberry With Return (Winged)
+entities.vitellary/lockedintrocar.placements.name.locked_intro_car=Locked Intro Car
+entities.vitellary/starcrystal.placements.name.star_crystal=Star Crystal
+entities.vitellary/goodtelecrystal.placements.name.up=Tele Crystal (Up)
+entities.vitellary/goodtelecrystal.placements.name.down=Tele Crystal (Down)
+entities.vitellary/goodtelecrystal.placements.name.left=Tele Crystal (Left)
+entities.vitellary/goodtelecrystal.placements.name.right=Tele Crystal (Right)
+entities.vitellary/timecrystal.placements.name.normal=Time Crystal
+entities.vitellary/timecrystal.placements.name.until_dash=Time Crystal (Until Dash)
+entities.vitellary/forcefield.placements.name.forcefield8x8=Forcefield (1 Tile)
+entities.vitellary/forcefield.placements.name.forcefield16x16=Forcefield (2 Tiles)
+entities.vitellary/bumperblock.placements.name.both=Bumper Block (Both)
+entities.vitellary/bumperblock.placements.name.vertical=Bumper Block (Vertical)
+entities.vitellary/bumperblock.placements.name.horizontal=Bumper Block (Horizontal)
+entities.vitellary/cassetteflags.placements.name.cassette_flags=Cassette Flag Controller
+entities.vitellary/customheart.placements.name.custom_heart=Custom Fake Heart
+entities.vitellary/custompuffer.placements.name.puffer_right=Custom Puffer (Right)
+entities.vitellary/custompuffer.placements.name.puffer_left=Custom Puffer (Left)
+entities.vitellary/customtouchswitch.placements.name.custom_touch_switch=Custom Moving Touch Switch
+entities.vitellary/deadlydashswitch.placements.name.deadlyswitch_right=Deadly Dash Switch (Right)
+entities.vitellary/deadlydashswitch.placements.name.deadlyswitch_down=Deadly Dash Switch (Down)
+entities.vitellary/deadlydashswitch.placements.name.deadlyswitch_left=Deadly Dash Switch (Left)
+entities.vitellary/deadlydashswitch.placements.name.deadlyswitch_up=Deadly Dash Switch (Up)
+entities.vitellary/energybooster.placements.name.normal=Energy Booster
+entities.vitellary/energybooster.placements.name.redirect=Energy Booster (Redirect)
+entities.vitellary/fastbounceblock.placements.name.fire=Fast Bounce Block
+entities.vitellary/flagcrystal.placements.name.flag_crystal=Flag Crystal
+entities.vitellary/flagkevin.placements.name.normal=Flag Kevin
+entities.vitellary/flagkevin.placements.name.lava_aware=Flag Kevin (Lava-Aware)
+entities.vitellary/interactivechaser.placements.name.interactive_chaser=Interactive Badeline Chaser
+entities.vitellary/paireddashswitch.placements.name.pairedswitch_right=Paired Dash Switch (Right)
+entities.vitellary/paireddashswitch.placements.name.pairedswitch_down=Paired Dash Switch (Down)
+entities.vitellary/paireddashswitch.placements.name.pairedswitch_left=Paired Dash Switch (Left)
+entities.vitellary/paireddashswitch.placements.name.pairedswitch_up=Paired Dash Switch (Up)
+entities.vitellary/smwcheckpoint.placements.name.checkpoint=SMW Checkpoint
+entities.vitellary/templegateall.placements.name.default=Temple Gate (Default, All Switches)
+entities.vitellary/triggerbeam.placements.name.beam_right=Trigger Beam (Right)
+entities.vitellary/triggerbeam.placements.name.beam_down=Trigger Beam (Down)
+entities.vitellary/triggerbeam.placements.name.beam_left=Trigger Beam (Left)
+entities.vitellary/triggerbeam.placements.name.beam_up=Trigger Beam (Up)
+entities.vitellary/dashcodecontroller.placements.name.dash_code_controller=Dash Code Controller
+entities.vitellary/roomname.placements.name.room_name=Room Name Controller
+
+# Triggers
+
+triggers.vitellary/bloomstrengthtrigger.placements.name.bloom_strength_trigger=Bloom Strength Trigger
+triggers.vitellary/canceltimecrystaltrigger.placements.name.cancel_time_crystal_trigger=Cancel Time Crystal Trigger
+triggers.vitellary/custombridgeactivator.placements.name.custom_bridge_activator=Custom Bridge Activator
+triggers.vitellary/customwindtrigger.placements.name.custom_wind_trigger=Custom Wind Trigger
+triggers.vitellary/editdepthtrigger.placements.name.edit_depth_trigger=Edit Depth Trigger
+triggers.vitellary/nodashtrigger.placements.name.no_dash_trigger=No Dash Trigger
+triggers.vitellary/nograbtrigger.placements.name.no_grab_trigger=No Grab Trigger
+triggers.vitellary/nojumptrigger.placements.name.no_jump_trigger=No Jump Trigger
+triggers.vitellary/nomovetrigger.placements.name.no_move_trigger=Player Timestop Trigger
+triggers.vitellary/resetdoortrigger.placements.name.reset_door_trigger=Reset Door Trigger
+triggers.vitellary/timedfadetrigger.placements.name.timed_fade_trigger=Timed Fade Trigger
+triggers.vitellary/triggertrigger.placements.name.coremode=Trigger Trigger (Core Mode)
+triggers.vitellary/triggertrigger.placements.name.flag=Trigger Trigger (Flag)
+triggers.vitellary/triggertrigger.placements.name.dashing=Trigger Trigger (Dashing)
+triggers.vitellary/triggertrigger.placements.name.dashcount=Trigger Trigger (Dash Count)
+triggers.vitellary/triggertrigger.placements.name.deathsinroom=Trigger Trigger (Deaths In Room)
+triggers.vitellary/triggertrigger.placements.name.deathsinlevel=Trigger Trigger (Deaths In Level)
+triggers.vitellary/triggertrigger.placements.name.grabholdable=Trigger Trigger (Holdable Grabbed)
+triggers.vitellary/triggertrigger.placements.name.speedx=Trigger Trigger (Horizontal Speed)
+triggers.vitellary/triggertrigger.placements.name.speedy=Trigger Trigger (Vertical Speed)
+triggers.vitellary/triggertrigger.placements.name.jumping=Trigger Trigger (Jumping)
+triggers.vitellary/triggertrigger.placements.name.crouching=Trigger Trigger (Crouching)
+triggers.vitellary/triggertrigger.placements.name.timesincemovement=Trigger Trigger (Time Since Player Moved)
+triggers.vitellary/triggertrigger.placements.name.onholdableenter=Trigger Trigger (Holdable Entered)
+triggers.vitellary/triggertrigger.placements.name.onentitycollide=Trigger Trigger (On Entity Touch)
+triggers.vitellary/triggertrigger.placements.name.oninteraction=Trigger Trigger (On Interaction)
+triggers.vitellary/triggertrigger.placements.name.onsolid=Trigger Trigger (Touched Solid)
+triggers.vitellary/triggertrigger.placements.name.onentityenter=Trigger Trigger (Entity Entered)
+triggers.vitellary/triggertrigger.placements.name.oninput=Trigger Trigger (On Input)
+triggers.vitellary/triggertrigger.placements.name.ongrounded=Trigger Trigger (Grounded)
+triggers.vitellary/triggertrigger.placements.name.onplayerstate=Trigger Trigger (Player State)
+triggers.vitellary/bombtimer.placements.name.bomb_timer=Bomb Timer Trigger
+triggers.vitellary/dropholdables.placements.name.drop_holdables=Drop Holdable Trigger
+triggers.vitellary/roomnametrigger.placements.name.room_name_trigger=Room Name Trigger
+triggers.vitellary/coyotebounce.placements.name.coyote_bounce=Coyote Bounce Trigger
+triggers.vitellary/flaginsidetrigger.placements.name.flag_inside=Flag Inside Trigger
+
+# Effects
+
+style.effects.CrystallineHelper/CustomWindSnow.name=Custom Wind Snow
+
+# - Tooltips -
+
+# Fill Crystal
+entities.vitellary/fillcrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/fillcrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+
+# Time Crystal
+entities.vitellary/timecrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/timecrystal.attributes.description.stopLength=How long (in seconds) the crystal should stop time.
+entities.vitellary/timecrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+entities.vitellary/timecrystal.attributes.description.immediate=Whether the transition to time stopping should be smooth or instantaneous.
+entities.vitellary/timecrystal.attributes.description.entityTypesToIgnore=List of class names for the time crystal to not affect, separated by commas.
+entities.vitellary/timecrystal.attributes.description.timeScale=The time scale that the entities should be changed to.
+
+# Tele Crystal
+entities.vitellary/telecrystal.attributes.description.direction=The direction of the crystal.
+entities.vitellary/telecrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/goodtelecrystal.attributes.description.direction=The direction of the crystal.
+entities.vitellary/goodtelecrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/goodtelecrystal.attributes.description.preventCrash=If false, the crystal will attempt to move you as far as possible until you collide with a wall, which will crash the game if it never does collide with a wall.
+entities.vitellary/goodtelecrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+entities.vitellary/goodtelecrystal.attributes.description.resetSpeed=Whether the crystal should reset the player's speed along the teleported axis.
+
+# Star Crystal
+entities.vitellary/starcrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/starcrystal.attributes.description.time=How long the effect should last.
+entities.vitellary/starcrystal.attributes.description.changeDashes=Whether the crystal should give you infinite dashes.
+entities.vitellary/starcrystal.attributes.description.changeInvuln=Whether the crystal should make you invincible.
+entities.vitellary/starcrystal.attributes.description.changeStamina=Whether the crystal should give you infinite stamina.
+entities.vitellary/starcrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+
+# Force Dash Crystal
+entities.vitellary/forcedashcrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/forcedashcrystal.attributes.description.direction=Direction the player is forced to dash. If "None" is selected, the player dashes in the direction they hold.
+entities.vitellary/forcedashcrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+entities.vitellary/forcedashcrystal.attributes.description.needDash=Whether the crystal should require that you have a dash, and consume a dash when used.
+
+# Force Jump Crystal
+entities.vitellary/forcejumpcrystal.attributes.description.oneUse=Whether the refill should respawn after being used.
+entities.vitellary/forcejumpcrystal.attributes.description.respawnTime=How long (in seconds) after using the crystal for it to respawn.
+entities.vitellary/forcejumpcrystal.attributes.description.holdJump=Whether the jump should be a full height jump or a short hop.
+
+# Keyberry
+entities.vitellary/keyberry.attributes.description.winged=The keyberry attempts to vertically rise offscreen when the player dashes.
+entities.vitellary/keyberry.attributes.description.collectTime=How long the player needs to be grounded in order for the berry to be collected.
+entities.vitellary/keyberry.attributes.description.persistent=Whether the keyberry and the door it unlocks should disappear permanently, or not (re-appearing when the room is re-entered).
+
+# Keyberry With Return
+entities.vitellary/returnkeyberry.attributes.description.winged=The keyberry attempts to vertically rise offscreen when the player dashes.
+
+# Linked Move Block
+entities.vitellary/vitmoveblock.attributes.description.canSteer=Determines whether the move block can be moved by the player.
+entities.vitellary/vitmoveblock.attributes.description.direction=Determines the direction the move block moves in upon activation.
+entities.vitellary/vitmoveblock.attributes.description.remote=The group the move block gets activated with. 0 means it's a normal move block.
+entities.vitellary/vitmoveblock.attributes.description.canActivate=Determines whether the player is able to activate the block by touching it.
+entities.vitellary/vitmoveblock.attributes.description.spritePath=Path for the move block's sprite, relative to Graphics/Atlases/Gameplay.
+entities.vitellary/vitmoveblock.attributes.description.moveSpeed=Speed the block will move at. Default is 75.
+
+# Forcefield
+entities.vitellary/forcefield.attributes.description.texture=A folder containing textures for the forcefield, relative to Gameplay/objects.\nThe folder must contain an "end" sprite for the nodes, and a "laser" sprite for the lines.
+entities.vitellary/forcefield.attributes.description.tint=A hex color that the texture will be tinted by.
+entities.vitellary/forcefield.attributes.description.flag=If specified, the forcefield will only appear if the flag is true.\nStarting the flag with "!" will invert the condition.
+entities.vitellary/forcefield.attributes.description.visibleDistance=If this value is greater than 0, then the forcefield will not be visible unless the player is this amount of pixels away from it or less.
+entities.vitellary/forcefield.attributes.description.allowClipping=Whether the player should be able to clip through the forcefield if they have enough speed.
+
+# Fast Bounce Block
+entities.vitellary/fastbounceblock.attributes.description.blockType=Whether the block toggles based on core mode, or is only fire / only ice regardless of core mode.
+
+# Flag Crystal
+entities.vitellary/flagcrystal.attributes.description.color=Changes the color of the sprite.
+entities.vitellary/flagcrystal.attributes.description.sprite=The location of the crystal sprite.
+entities.vitellary/flagcrystal.attributes.description.flag=The flag that will be set when the crystal is picked up and unset when dropped.
+entities.vitellary/flagcrystal.attributes.description.spawnFlag=Makes this crystal only spawn if a flag is already set on room entry.
+entities.vitellary/flagcrystal.attributes.description.theo=Whether the crystal contains Theo, which makes dropping it kill the player.
+entities.vitellary/flagcrystal.attributes.description.invertFlag=If true, the crystal will only spawn if the Spawn Flag is false.
+
+# Deadly Dash Switch
+entities.vitellary/deadlyswitch.attributes.description.direction=The facing direction of the dash switch.
+entities.vitellary/deadlyswitch.attributes.description.persistent=Once turned on, it will stay activated, even if the player dies.
+
+# Custom Puffer
+entities.vitellary/custompuffer.attributes.description.right=The puffer's visual facing direction.
+entities.vitellary/custompuffer.attributes.description.static=Whether the puffer floats around idly.
+entities.vitellary/custompuffer.attributes.description.alwaysShowOutline=Whether the explosion radius is always visible.
+entities.vitellary/custompuffer.attributes.description.pushAnyDir=Whether the puffer can be pushed any direction, or only based on its angle.
+entities.vitellary/custompuffer.attributes.description.oneUse=Whether the puffer respawns after exploding.
+entities.vitellary/custompuffer.attributes.description.angle=Angle (in degrees) of the explosion half-circle. 0 = below, 90 = left, etc.
+entities.vitellary/custompuffer.attributes.description.radius=Size of the explosion radius.
+entities.vitellary/custompuffer.attributes.description.launchSpeed=How fast the explosion launches you.
+entities.vitellary/custompuffer.attributes.description.respawnTime=How fast the puffer respawns after exploding.
+entities.vitellary/custompuffer.attributes.description.sprite=Sprite name from Sprites.xml of the pufferfish. Not reflected in Lönn.
+entities.vitellary/custompuffer.attributes.description.deathFlag=Flag to set when the pufferfish explodes.
+entities.vitellary/custompuffer.attributes.description.holdable=Whether the player can pick up and throw the pufferfish.
+entities.vitellary/custompuffer.attributes.description.outlineColor=The color of the dotted radius outline.
+entities.vitellary/custompuffer.attributes.description.returnToStart=Whether the puffer will respawn at its starting position.
+entities.vitellary/custompuffer.attributes.description.holdFlip=Whether the puffer will flip with the player when held.
+entities.vitellary/custompuffer.attributes.description.boostMode=The way the puffer's explosion should affect the player.\nSet Speed: Default puffer behavior, sets the player's speed to the launch speed in the angle specified.\nRedirect Speed: If the player has a greater speed than the launch speed specified, apply that speed to the new angle instead.\nRedirect + Add Speed: Takes the player's current speed and redirects it, then adds the puffer's launch speed as well.
+entities.vitellary/custompuffer.attributes.description.legacyBoost=Whether the puffer boost should use the older, less lenient method of checking player input (only accepting input before the freeze frames, rather than after).
+entities.vitellary/custompuffer.attributes.description.absoluteVector=If true, the redirect modes for launch will use the player's full speed, including vertical and horizontal, rather than only horizontal speed.
+entities.vitellary/custompuffer.attributes.description.tangible=Controls if the puffer can be hit by the player.
+entities.vitellary/custompuffer.attributes.description.alwaysBoost=Whether the player will always get explosion boosts regardless of the direction they were holding during the explosion.
+
+# Energy Booster
+entities.vitellary/energybooster.attributes.description.behaveLikeDash=Whether the speed resets after the initial boost unless dashing down diagonal.
+entities.vitellary/energybooster.attributes.description.redirectSpeed=Stores your total speed regardless of direction and sends you out exactly that fast in the direction you boost.
+entities.vitellary/energybooster.attributes.description.oneUse=Whether the booster can only be used once.
+entities.vitellary/energybooster.attributes.description.setLastBooster=Whether to correctly update the internal variable that keeps track of the last booster touched by the player.\nDisabling this can result in unintended behavior when used alongside other custom booster entities.
+
+# Paired Dash Switch
+entities.vitellary/paireddashswitch.attributes.description.flag=If specified, this flag will be set to true when the switch is pressed.
+entities.vitellary/paireddashswitch.attributes.description.groupId=The switch will release other switches with the same Group ID when pressed.
+entities.vitellary/paireddashswitch.attributes.description.sprite=Sprite name from Sprites.xml of the dash switch. Not reflected in Lönn.
+entities.vitellary/paireddashswitch.attributes.description.direction=Facing direction of the dash switch.
+entities.vitellary/paireddashswitch.attributes.description.affectedByFlag=Whether the switch will always match the state of the given flag.
+entities.vitellary/paireddashswitch.attributes.description.pressed=Whether the switch is pressed by default.
+
+# Custom Fake Heart
+entities.vitellary/customheart.attributes.description.respawnTime=The time in seconds for the heart to respawn after being collected. -1 for no respawn.
+entities.vitellary/customheart.attributes.description.poemId=Dialogue ID for the poem. Note: Will be prefixed with "poem_"
+entities.vitellary/customheart.attributes.description.color=The hex color for the sprite if using a Custom heart.
+entities.vitellary/customheart.attributes.description.path=The path to the heart textures in the "collectables" subfolder.
+entities.vitellary/customheart.attributes.description.type=Changes the sprite of the heart.\nRed, Blue, Gold - Vanilla colors\nCustom - Lets you set the sprite path and color\nCore, CoreInverted - Changes based on core mode\nRandom - Randomly picks one of the three main colors
+entities.vitellary/customheart.attributes.description.bloom=The bloom strength of the heart.
+entities.vitellary/customheart.attributes.description.endLevel=Whether collecting the heart ends the level.
+entities.vitellary/customheart.attributes.description.slowdown=Whether collecting the heart plays the cutscene and slows down the game.
+entities.vitellary/customheart.attributes.description.light=Whether the heart has some light effect or something idk its usually there
+entities.vitellary/customheart.attributes.description.additionalEffects=Minor changes to the heart effects (crystal sounds, break particles, disappearing light)
+entities.vitellary/customheart.attributes.description.oneUse=Whether the heart never respawns for the rest of the session.
+entities.vitellary/customheart.attributes.description.bully=Whether the heart is a big meanie and bounces you away even if you dash
+entities.vitellary/customheart.attributes.description.switchCoreMode=Switches core mode when collected. Red = hot, Blue = cold, other types = toggle
+entities.vitellary/customheart.attributes.description.colorGrade=Whether switching core mode also switches color grade between hot and cold.
+entities.vitellary/customheart.attributes.description.static=Disables the heart floaty effect.
+entities.vitellary/customheart.attributes.description.poemCutscene=Whether the heart should show the poem cutscene upon collection.\nDoes not do anything if "Slowdown" is false.
+
+# Custom Moving Touch Switch
+entities.vitellary/customtouchswitch.attributes.description.flag=The session flag this touch switch sets. Give the same to multiple touch switches and switch gates to group them.
+entities.vitellary/customtouchswitch.attributes.description.icon=The name of the icon for the touch switch (relative to objects/customMovingTouchSwitch), or "vanilla" for the default one.
+entities.vitellary/customtouchswitch.attributes.description.border=The border of the touch switch (relative to objects/customMovingTouchSwitch), or "vanilla" for the default one.
+entities.vitellary/customtouchswitch.attributes.description.persistent=If enabled, the touch switch will stay active when the player dies or changes rooms.
+entities.vitellary/customtouchswitch.attributes.description.inactiveColor=The switch colour when not triggered yet.
+entities.vitellary/customtouchswitch.attributes.description.movingColor=The switch colour while moving to the next node.
+entities.vitellary/customtouchswitch.attributes.description.activeColor=The switch colour when triggered, but the group is not complete yet.
+entities.vitellary/customtouchswitch.attributes.description.finishColor=The switch colour when the group is complete.
+entities.vitellary/customtouchswitch.attributes.description.smoke=Whether the touch switch emits smoke when the group is complete.
+entities.vitellary/customtouchswitch.attributes.description.inverted=Whether the touch switch should turn off the flag instead of turning it on. The option should match on all touch switches of the group.
+entities.vitellary/customtouchswitch.attributes.description.allowDisable=Whether the touch switch can be disabled once the group is complete, if the flag change is reverted.
+entities.vitellary/customtouchswitch.attributes.description.badelineDeactivate=Whether the touch switch deactivates when touched by an interactive badeline chaser.
+entities.vitellary/customtouchswitch.attributes.description.moveTime=The time it takes for the switch to move between nodes.
+entities.vitellary/customtouchswitch.attributes.description.easing=The easing of the switch's movement between nodes.
+entities.vitellary/customtouchswitch.attributes.description.randomOrder=Should the order the nodes are visited be randomized? Off: Nodes are visited in order. On: `Path Length` of this entity's nodes are visited in a random order.
+entities.vitellary/customtouchswitch.attributes.description.pathLength=When using `Random Order`, the number of nodes that should be visited before finishing. -1 to use the number of attached nodes.
+entities.vitellary/customtouchswitch.attributes.description.revisitPreviousNodes=When using `Random Order`, am I allowed to revisit nodes I have already been to? The sequence may be finished early if there are no nodes left to visit.
+
+# Trigger Beam
+entities.vitellary/triggerbeam.attributes.description.color=The color of the beam.
+entities.vitellary/triggerbeam.attributes.description.alpha=The color alpha of the beam while active.
+entities.vitellary/triggerbeam.attributes.description.inactiveAlpha=The color alpha of the beam while inactive (disabled by flag).
+entities.vitellary/triggerbeam.attributes.description.flag=Flag to enable/disable the beam. Leave empty for always active.
+entities.vitellary/triggerbeam.attributes.description.exitNodes=Comma-separated list of node numbers (e.g. 1,3,5) to specify triggers that will be activated when the player exits the beam. Exit nodes will display a purple arrow.
+entities.vitellary/triggerbeam.attributes.description.invertFlag=Whether enabling the flag disables the beam.
+entities.vitellary/triggerbeam.attributes.description.exitAlwaysActive=Whether the exit triggers are always active when the player is outside the beam.
+entities.vitellary/triggerbeam.attributes.description.attachToSolids=The beam attaches to the surface of the entity or block, and can be moved by them.
+
+# Interactive Badeline Chaser
+entities.vitellary/interactivechaser.attributes.description.followDelay=How far behind badeline will follow you.
+entities.vitellary/interactivechaser.attributes.description.startDelay=Time before badeline appears and starts chasing you.
+entities.vitellary/interactivechaser.attributes.description.mirroring=Mirrors badeline to the other side of the room.
+entities.vitellary/interactivechaser.attributes.description.blacklist=Comma-separated list of entity class names to ignore for some interactions.
+entities.vitellary/interactivechaser.attributes.description.flag=Flag that will activate badeline.
+entities.vitellary/interactivechaser.attributes.description.harmful=Whether badeline kills the player on contact.
+entities.vitellary/interactivechaser.attributes.description.canChangeMusic=Whether the music gets set to the badeline chase music.
+entities.vitellary/interactivechaser.attributes.description.sendToPlayer=If true, interactions with entities will be sent to the player instead of applying to the chaser.
+
+# Flag Kevin
+entities.vitellary/flagkevin.attributes.description.customPath=Path to the kevin sprite to use. Relative to Atlases/Gameplay/objects.
+entities.vitellary/flagkevin.attributes.description.fillColor=Fill color for the kevin.
+entities.vitellary/flagkevin.attributes.description.flagDirection=Direction to move when the flag is triggered.
+entities.vitellary/flagkevin.attributes.description.flag=Flag that should trigger the kevin.
+entities.vitellary/flagkevin.attributes.description.inverted=If true, the kevin is triggered when the flag becomes false rather than true.
+entities.vitellary/flagkevin.attributes.description.lavaSpeed=Percentage of normal speed to use when the kevin is in lava.
+entities.vitellary/flagkevin.attributes.description.chillout=Whether the Kevin should have a large face and get tired after being hit.
+entities.vitellary/flagkevin.attributes.description.axes=Determines which sides of the Kevin are hittable.
+entities.vitellary/flagkevin.attributes.description.playerCanHit=Whether the player can hit the Kevin's sides.
+entities.vitellary/flagkevin.attributes.description.repeatWhileFlag=If true, the kevin will repeatedly move in the flag direction every time it returns to its initial spot while the flag is true.
+entities.vitellary/flagkevin.attributes.description.setFlagOnHit=If true, the flag will be set to true when the player hits the Kevin.
+entities.vitellary/flagkevin.attributes.description.useVanillaParticles=If true, the kevin will use vanilla activate/crush/impact particles instead of only impact particles.
+entities.vitellary/flagkevin.attributes.description.crushSpeed=The speed at which the Kevin will move when attacking.
+entities.vitellary/flagkevin.attributes.description.returnSpeed=The speed at which the Kevin will move when returning.
+
+# Bumper Block
+entities.vitellary/bumperblock.attributes.description.axes=Directions you can dash into to hit the block.
+entities.vitellary/bumperblock.attributes.description.activeByNormalCollision=Block can be activated by normal collisions, not just dashes.
+
+# SMW Checkpoint
+entities.vitellary/smwcheckpoint.attributes.description.fullHeight=Whether the hitbox to touch the checkpoint is the full height of the poles, or just the bar.
+
+# Cassette Flag Controller
+entities.vitellary/cassetteflags.attributes.description.blueFlag=The flag to enable while the cassette cycle is blue.
+entities.vitellary/cassetteflags.attributes.description.pinkFlag=The flag to enable while the cassette cycle is pink.
+entities.vitellary/cassetteflags.attributes.description.yellowFlag=The flag to enable while the cassette cycle is yellow.
+entities.vitellary/cassetteflags.attributes.description.greenFlag=The flag to enable while the cassette cycle is green.
+
+# Room Name Controller
+entities.vitellary/roomname.attributes.description.roomName=The text to appear at the bottom of the screen. Accepts dialog keys.\nTo make text disappear, leave this as blank.
+entities.vitellary/roomname.attributes.description.backgroundColor=The color of the rectangle behind the room name.
+entities.vitellary/roomname.attributes.description.textColor=The color of the room name text.
+entities.vitellary/roomname.attributes.description.outlineColor=The color of the text's outline, if it has one.
+entities.vitellary/roomname.attributes.description.outlineThickness=The size of the text's outline. 0 means it won't have one.
+entities.vitellary/roomname.attributes.description.scale=The scale multiplier of the room name.
+entities.vitellary/roomname.attributes.description.offset=Vertical offset of the room name. Negative values make it higher.
+entities.vitellary/roomname.attributes.description.disappearTimer=The amount of time until the room name goes away. Negative values means the text won't disappear.
+
+# Remote Trigger
+entities.vitellary/remotetrigger.attributes.description.value=The Linked Move Block group the trigger activates.
+
+# Reset Door Trigger
+triggers.vitellary/resetdoortrigger.attributes.description.oneUse=Whether the trigger can be used more than once in the room.
+triggers.vitellary/resetdoortrigger.attributes.description.animate=Whether doors and keys should animate upon respawning.
+triggers.vitellary/resetdoortrigger.attributes.description.onlyInRoom=Whether the trigger should affect keys and doors outside of the current room.
+
+# Custom Prologue Bridge and Activator
+entities.vitellary/customprologuebridge.attributes.description.activationID=The ID used in the Activator to begin crumbling the bridge. Do not reuse IDs throughout the level!
+entities.vitellary/customprologuebridge.attributes.description.activationIndex=Used to determine the order the bridges should fall. 0 is the first bridge that collapses.
+entities.vitellary/customprologuebridge.attributes.description.left=Whether the bridge should start collapsing from the right side.
+entities.vitellary/customprologuebridge.attributes.description.delay=How long to wait after the trigger has been activated / the previous bridge has finished collapsing before beginning to collapse.
+entities.vitellary/customprologuebridge.attributes.description.speed=How fast the bridge should crumble. 0.8 is just slow enough that the player can keep up without dashing.
+entities.vitellary/customprologuebridge.attributes.description.flag=If the flag is true, the bridge won't appear.
+triggers.vitellary/custombridgeactivator.attributes.description.activationID=The ID for the group of bridges the trigger should activate.
+
+# Dash Code Controller
+entities.vitellary/dashcodecontroller.attributes.description.dashCode=The code the player needs to input. Should be in the form of "U,DR,L", with commas separating each direction. When writing diagonals, write them with vertical first, then horizontal, with no space. * is also a valid input, meaning you can dash any direction for it to work.
+entities.vitellary/dashcodecontroller.attributes.description.flagLabel=The starting label of the flags that will get activated.\nEvery time a dash is successfully inputted, a flag with this label + "_##" will be set to true.\nFor example, flag label "test" followed by a successful dash will set "test_01" to true.
+entities.vitellary/dashcodecontroller.attributes.description.flagOnFailure=Flag that will get set to true if the sequence has started, but fails partway through.
+entities.vitellary/dashcodecontroller.attributes.description.index=This sequence's index, used by the UI entity to correctly display dash sequences in order.
+
+# Custom Wind Trigger
+triggers.vitellary/customwindtrigger.attributes.description.speedX=The horizontal speed of the wind. Can be a list of speeds, separated by commas. For reference, normal wind speed is 4, and strong is 8.
+triggers.vitellary/customwindtrigger.attributes.description.speedY=The vertical speed of the wind. Can be a list of speeds, separated by commas. For reference, normal down wind speed is 3, and up is -4.
+triggers.vitellary/customwindtrigger.attributes.description.alternationSpeed=The time, in seconds, that it takes to switch between speeds if there is a list in either horizontal or vertical speed. Can also be a list of speeds, separated by commas, which will be looped through.
+triggers.vitellary/customwindtrigger.attributes.description.catchupSpeed=How fast the wind changes from the previous value. Default is 1.
+triggers.vitellary/customwindtrigger.attributes.description.activationType=Special condition for the wind to activate.
+triggers.vitellary/customwindtrigger.attributes.description.loop=Whether the wind should loop or just stop at the last values when going through a list of speeds.
+triggers.vitellary/customwindtrigger.attributes.description.persist=If true, the wind created will stay after transitioning to a different room or dying. It will still be replaced by other wind triggers.
+triggers.vitellary/customwindtrigger.attributes.description.oneUse=Whether the wind trigger should disappear after being used.
+triggers.vitellary/customwindtrigger.attributes.description.onRoomEnter=Whether the wind trigger should activate immediately when the player enters its room, regardless of the player position.
+triggers.vitellary/customwindtrigger.attributes.description.fixUpdateDepth=Whether the wind should always update before the player. If unchecked, whether it updates before or after the player is able to change depending on load order, resulting in inconsistent behavior.
+
+# Custom Wind Snow
+effects.CrystallineHelper/CustomWindSnow.attributes.description.colors=List of possible colors the wind particles can have, separated by commas.
+effects.CrystallineHelper/CustomWindSnow.attributes.description.alphas=List of alphas associated with each color, separated by commas. If the amount of alphas is not the same as the amount of colors, each particle will just take the value of the first alpha listed.
+effects.CrystallineHelper/CustomWindSnow.attributes.description.amount=Amount of particles. Default is 240.
+effects.CrystallineHelper/CustomWindSnow.attributes.description.speedX=Horizontal speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
+effects.CrystallineHelper/CustomWindSnow.attributes.description.speedY=Vertical speed that the effect has by default (does not affect gameplay). Current wind strength will be added to it.
+effects.CrystallineHelper/CustomWindSnow.attributes.description.ignoreWind=Whether the effect should change based on current wind.
+
+# Player Timestop Trigger
+triggers.vitellary/nomovetrigger.attributes.description.stopLength=Determines how long the player will be frozen for.
+
+# Trigger Trigger
+triggers.vitellary/triggertrigger.attributes.description.activationType=The condition the trigger checks. If you want to change this, you must update this option, then close and reopen this window, so that the correct options appear.\nFlag: When the flag is true. If the flag is left blank, it will always activate when entered.\nDashing: When the player inside is dashing.\nDash Count: If the player's dash count meets the condition specified.\nDeaths In Room: If the player has died the specified amount of times in the room.\nDeaths In Level: If the player has died the specified amount of times in the entire session.\nHoldable Grabbed: When the player grabs a holdable.\nHorizontal / Vertical Speed: If the player's speed meets the condition specified.\nJumping: When the player jumps.\nCrouching: When the player crouches.\nTime Since Player Moved: If the amount of time the player has stayed perfectly still meets the condition specified.\nHoldable Entered: When a holdable object enters the trigger.\nOn Entity Touch: When the amount of times the player touches the specified type of entity meets the condition specified.\nCore Mode: If the core mode of the level matches the specified mode.\nOn Interaction: When the player interacts (via talk button) with the trigger.\nTouched Solid: If the player is either standing on or grabbing the specified solid, or any solid or platform if none is specified.\nEntity Entered: When the specified type of entity enters the trigger.\nOn Input: When the specified input is pressed within the trigger.\nGrounded: Whether the player is standing on the ground.
+triggers.vitellary/triggertrigger.attributes.description.oneUse=Whether the trigger disappears after being used.
+triggers.vitellary/triggertrigger.attributes.description.flag=Flag that must be active for the trigger to be used. If left blank, trigger will not require a flag.
+triggers.vitellary/triggertrigger.attributes.description.invertFlag=Whether the flag specified should be false instead of true.
+triggers.vitellary/triggertrigger.attributes.description.delay=How long to wait after activating the trigger for it to activate the chosen triggers.
+triggers.vitellary/triggertrigger.attributes.description.activateOnTransition=If true, then the trigger will activate upon entering the room.
+triggers.vitellary/triggertrigger.attributes.description.randomize=If true, the trigger will randomly activate only one of the chosen triggers instead of all of them.
+triggers.vitellary/triggertrigger.attributes.description.matchPosition=If enabled, the selected triggers will be moved and resized to match this trigger. Allows triggers that change based on position, such as Light Fade, to work.
+triggers.vitellary/triggertrigger.attributes.description.invertCondition=Whether the condition should not be met in order to activate.
+triggers.vitellary/triggertrigger.attributes.description.onlyOnEnter=Whether the trigger should only check the condition the first time you enter it, instead of checking every frame you're inside it.
+triggers.vitellary/triggertrigger.attributes.description.comparisonType=For numerical comparisons, whether the requirement should be less than, equal to or greater than the specified value.
+triggers.vitellary/triggertrigger.attributes.description.absoluteValue=For numerical comparisons, whether the comparison should only consider the absolute value for the requirement.
+triggers.vitellary/triggertrigger.attributes.description.deaths=How many times the player needs to have died. Depending on the trigger chosen, will refer to either deaths only within the room (resets upon exiting the room) or total deaths in the level (resets upon restarting chapter / returning to map).
+triggers.vitellary/triggertrigger.attributes.description.dashCount=How many dashes the player needs to have.
+triggers.vitellary/triggertrigger.attributes.description.requiredSpeed=How much speed the player should have, in pixels/second. Positive means right / down, negative means left / up. Some values to reference:\nDefault walking speed is 90.\nDefault dashing speed is 240.\nDefault hyper speed is 325.
+triggers.vitellary/triggertrigger.attributes.description.timeToWait=How long the player needs to wait, in seconds.
+triggers.vitellary/triggertrigger.attributes.description.coreMode=Core mode the level needs to be.
+triggers.vitellary/triggertrigger.attributes.description.entityType=Class name of the type of entity to check.
+triggers.vitellary/triggertrigger.attributes.description.solidType=Class name of the type of solid to check. If left blank, the trigger will allow any solids to be considered.
+triggers.vitellary/triggertrigger.attributes.description.inputType=The type of input the player needs to press.
+triggers.vitellary/triggertrigger.attributes.description.holdInput=Whether the trigger will be active for the entire time the input is held, or just for the frame it's pressed.
+triggers.vitellary/triggertrigger.attributes.description.onlyIfSafe=Whether the floor the player is standing on needs to be safe ground (aka. ground that a berry could be collected on).
+triggers.vitellary/triggertrigger.attributes.description.resetAfterJump=If true, the trigger will only be activated for one frame when you jump, rather than waiting until you touch the floor to deactivate.
+
+# Edit Depth Trigger
+triggers.vitellary/editdepthtrigger.attributes.description.depth=New depth to set the entity to. Lower / negative values will make the entities render above others.
+triggers.vitellary/editdepthtrigger.attributes.description.entitiesToAffect=The class name of the entity to alter. Can be a comma separated list of multiple entity types as well.
+triggers.vitellary/editdepthtrigger.attributes.description.debug=If true, then Celeste will write the names of all entities touching the trigger in the log (can be seen in log.txt immediately), as well as their current depths. Useful to figure out the names of the entities you'd like to affect, though remember to disable the option later.
+triggers.vitellary/editdepthtrigger.attributes.description.updateOnEntry=If true, the trigger will affect entities that move into it; otherwise, it will only affect entities that are touching it when the room loads.
+triggers.vitellary/editdepthtrigger.attributes.description.cacheValidEntities=If 'Update On Entry' is enabled, then all entities that pass the type filter will get cached, massively improving performance.\nOnly disable if you want to edit the depth of entities that get dynamically added to the level after its loaded, like debris.
+
+# Bloom Strength Trigger
+triggers.vitellary/bloomstrengthtrigger.attributes.description.bloomStrengthFrom=Determines where the bloom strength starts.
+triggers.vitellary/bloomstrengthtrigger.attributes.description.bloomStrengthTo=Determines where the bloom strength ends.
+triggers.vitellary/bloomstrengthtrigger.attributes.description.positionMode=Determines which direction the bloom strength fades towards.
+
+# Timed Fade Trigger
+triggers.vitellary/timedfadetrigger.attributes.description.time=How long to fade from the From value to the To value.
+triggers.vitellary/timedfadetrigger.attributes.description.oneUse=Whether the trigger should only work once.\nWas previously default behavior.
+
+# Bomb Timer Trigger
+triggers.vitellary/bombtimer.attributes.description.sound=Sound to play at the specified time (blank for none).
+triggers.vitellary/bombtimer.attributes.description.soundAt=Time at which the specified sound plays.
+triggers.vitellary/bombtimer.attributes.description.timer=Countdown duration until the player dies after touching the trigger. A time of 0 safely stops the timer.
+triggers.vitellary/bombtimer.attributes.description.startDirection=Direction the player has to move inside the trigger to start the timer.
+triggers.vitellary/bombtimer.attributes.description.changeRespawn=Whether the respawn point is set to the nearest one after activing the trigger.
+triggers.vitellary/bombtimer.attributes.description.resetOnDeath=Whether the player returns to the start after ANY death.
+
+# Room Name Trigger
+triggers.vitellary/roomnametrigger.attributes.description.roomName=The text to appear at the bottom of the screen. Accepts dialog keys.\nTo make text disappear, leave this as blank.
+triggers.vitellary/roomnametrigger.attributes.description.backgroundColor=The color of the rectangle behind the room name.
+triggers.vitellary/roomnametrigger.attributes.description.textColor=The color of the room name text.
+triggers.vitellary/roomnametrigger.attributes.description.outlineColor=The color of the text's outline, if it has one.
+triggers.vitellary/roomnametrigger.attributes.description.outlineThickness=The size of the text's outline. 0 means it won't have one.
+triggers.vitellary/roomnametrigger.attributes.description.scale=The scale multiplier of the room name.
+triggers.vitellary/roomnametrigger.attributes.description.offset=Vertical offset of the room name. Negative values make it higher.
+triggers.vitellary/roomnametrigger.attributes.description.disappearTimer=The amount of time until the room name goes away. Negative values means the text won't disappear.
+triggers.vitellary/roomnametrigger.attributes.description.oneUse=Whether the trigger should only apply once.
+triggers.vitellary/roomnametrigger.attributes.description.instant=Whether the text and colors should instantly appear, rather than easing in.
+
+# Coyote Bounce Trigger
+triggers.vitellary/coyotebounce.attributes.description.time=The amount of time the player should gain coyote frames for.\nThe vanilla amount is 0.1, or about 5 frames.
+triggers.vitellary/coyotebounce.attributes.description.refill=Whether the player should also refill dashes and stamina when bouncing.
+triggers.vitellary/coyotebounce.attributes.description.directions=The sides of the solid that should give you coyote frames upon collision.\n"Top" is useful for making existing vanilla behavior more consistent.\nOther sides are not based on vanilla mechanics, and are instead here because I thought it was fun.
+triggers.vitellary/coyotebounce.attributes.description.refillDirections=The directions that you can regain dashes and stamina from upon collision.\n"Match Coyote" means it will match the behavior of the "Directions" field.
+triggers.vitellary/coyotebounce.attributes.description.dashTypes=What type of collision should grant the coyote frames.\nPreviously, this defaulted to "All", which was unintended behavior.
+triggers.vitellary/coyotebounce.attributes.description.setGrounded=Whether the player should be considered grounded during the coyote frame period.\nThis is NOT the vanilla behavior, and may be jank.
+triggers.vitellary/coyotebounce.attributes.description.refillDashes=Whether the 'Refill Directions' property should refill dashes or not.
+triggers.vitellary/coyotebounce.attributes.description.refillStamina=Whether the 'Refill Directions' property should refill stamina or not.
+
+# Flag Inside Trigger
+triggers.vitellary/flaginsidetrigger.attributes.description.flag=The flag to set while the player is inside the trigger.
+
+# Flag Sequence On Spawn Controller
+entities.vitellary/flagsequencecontroller.attributes.description.startNumber=The first number to start the sequence.
+entities.vitellary/flagsequencecontroller.attributes.description.endNumber=The final number in the sequence.
+entities.vitellary/flagsequencecontroller.attributes.description.prefix=The text that prefixes each flag set. For example, prefix "flagname" with Start Number 8 and End Number 11 will set "flagname_08", "flagname_09", "flagname_10", and "flagname_11" all to the specified state.
+entities.vitellary/flagsequencecontroller.attributes.description.state=The state to set all of the flags to.
+entities.vitellary/flagsequencecontroller.attributes.description.onlyOnRespawn=Whether the flag should only be set when respawning in the room, and not entering it.
