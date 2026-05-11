@@ -64,6 +64,7 @@ namespace vitmod
 		private bool needsNewHome;
 		private bool sameFace;
 		private BoostModes boostMode;
+        private bool alwaysBoost;
 
 		private float respawnTime = 2.5f;
 		private float eyeSpin = 0f;
@@ -140,6 +141,7 @@ namespace vitmod
             launchState = data.Bool("setLaunchState", true);
             tangible=data.Bool("tangible", true);
             renderEye = data.Bool("renderEye", true);
+            alwaysBoost = data.Bool("alwaysBoost", false);
 
 
 			if (data.Bool("holdable"))
@@ -808,7 +810,7 @@ namespace vitmod
 				player.Speed.Y = Math.Min(Math.Max(-150f, -Math.Abs(launchSpeed)), player.Speed.Y);
 				player.AutoJump = true;
 			}
-			if (Input.MoveX.Value == Math.Sign(player.Speed.X))
+			if (Input.MoveX.Value == Math.Sign(player.Speed.X) || alwaysBoost)
 			{
                 player.explodeLaunchBoostTimer = 0f;
                 player.Speed.X *= 1.2f;
