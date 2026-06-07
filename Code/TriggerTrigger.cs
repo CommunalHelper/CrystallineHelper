@@ -48,6 +48,10 @@ namespace vitmod {
             absoluteValue = data.Bool("absoluteValue", false);
 
             flag = data.Attr("flag", "");
+            counterName = data.Attr("counterName", "");
+            sliderName = data.Attr("sliderName", "");
+            counterValue = data.Attr("counterValue", "0");
+            sliderValue = data.Attr("sliderValue", "0");
             deaths = data.Int("deaths", -1);
             dashCount = data.Int("dashCount", 0);
             requiredSpeed = data.Float("requiredSpeed", 0f);
@@ -262,6 +266,42 @@ namespace vitmod {
                     break;
                 case ActivationTypes.DashCount:
                     result = Compare(player.Dashes, dashCount);
+                    break;
+                case ActivationTypes.Counter:
+                    if (!string.IsNullOrEmpty(counterName))
+                    {
+                        if (!string.IsNullOrEmpty(counterValue))
+                        {
+                            if (int.TryParse(counterValue, out int n))
+                            {
+                                result = Compare(SceneAs<Level>().Session.GetCounter(counterName), n);
+                                break;
+                            }
+                            
+                            result = Compare(SceneAs<Level>().Session.GetCounter(counterName),
+                                SceneAs<Level>().Session.GetCounter(counterValue));
+                            break;
+                        }
+                    }
+                    result = false;
+                    break;
+                case ActivationTypes.Slider:
+                    if (!string.IsNullOrEmpty(sliderName))
+                    {
+                        if (!string.IsNullOrEmpty(sliderValue))
+                        {
+                            if (float.TryParse(sliderValue, out float m))
+                            {
+                                result = Compare(SceneAs<Level>().Session.GetSlider(sliderName), m);
+                                break;
+                            }
+                            
+                            result = Compare(SceneAs<Level>().Session.GetSlider(sliderName),
+                                SceneAs<Level>().Session.GetSlider(sliderValue));
+                            break;
+                        }
+                    }
+                    result = false;
                     break;
                 case ActivationTypes.DeathsInRoom:
                     result = Compare(SceneAs<Level>().Session.DeathsInCurrentLevel, deaths);
@@ -608,7 +648,8 @@ namespace vitmod {
         private Vector2[] nodes;
         private bool oneUse;
         public ActivationTypes activationType;
-        private string flag;
+        private string flag, counterName, sliderName;
+        private string counterValue, sliderValue;
         private int deaths;
         private int dashCount;
         private float requiredSpeed;
@@ -663,6 +704,8 @@ namespace vitmod {
             OnInput,
             OnGrounded,
             OnPlayerState,
+            Counter,
+            Slider
         };
         public enum InputTypes {
             Left,
