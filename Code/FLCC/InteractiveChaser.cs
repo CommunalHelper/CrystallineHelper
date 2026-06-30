@@ -6,7 +6,6 @@ using Mono.Cecil.Cil;
 using Monocle;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
-using MonoMod.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,12 +19,6 @@ namespace vitmod
 	[CustomEntity("vitellary/interactivechaser")]
 	public class InteractiveChaser : Entity {
         internal static DetourConfig RootConfig = new("CrystallineHelper_InteractiveChaser", 0);
-
-        private const string vitellaryInteractiveChaserStates = "vitellaryInteractiveChaserStates";
-        private const string vitellaryChaserPosition = "vitellaryChaserPosition";
-        private const string vitellaryChaserMovementCounter = "vitellaryChaserMovementCounter";
-        private const string vitellaryChaserSpeed = "vitellaryChaserSpeed";
-        private const string vitellaryChaserDashed = "vitellaryChaserDashed";
 
 		public static readonly Color HairColor = Calc.HexToColor("9B3FB5");
 
@@ -322,7 +315,7 @@ namespace vitmod
 		{
 			if (!player.Dead)
 			{
-				var chaserStates = DynamicData.For(player).Get<List<ChaserState>>(vitellaryInteractiveChaserStates);
+				var chaserStates = GetPlayerComponent(player).ChaserStates;
 				bool flag = false;
 				foreach (ChaserState chaserState in chaserStates)
 				{
@@ -394,7 +387,7 @@ namespace vitmod
 
 		private static void Player_OnTransition(On.Celeste.Player.orig_OnTransition orig, Player self)
 		{
-			var chaserStates = DynamicData.For(self).Get<List<ChaserState>>(vitellaryInteractiveChaserStates);
+			var chaserStates = GetPlayerComponent(self).ChaserStates;
 			chaserStates.Clear();
 			orig(self);
 		}
@@ -422,30 +415,25 @@ namespace vitmod
 
 			cursor.Emit(OpCodes.Ldarg_0);
 			cursor.EmitDelegate<Action<Player>>(player => {
-                var playerData = DynamicData.For(player);
-				playerData.Set(vitellaryChaserPosition, player.Position);
-				playerData.Set(vitellaryChaserMovementCounter, player.movementCounter);
-				playerData.Set(vitellaryChaserSpeed, player.Speed);
+                var playerData = GetPlayerComponent(player);
+				playerData.ChaserPosition = player.Position;
+				playerData.ChaserMovementCounter = player.movementCounter;
+				playerData.ChaserSpeed = player.Speed;
 				if (player.DashAttacking && player.Speed.Length() > 0f)
-					playerData.Set(vitellaryChaserDashed, player.DashDir);
+					playerData.ChaserDashed = player.DashDir;
 			});
 		}
 
 		private static void Player_Update(On.Celeste.Player.orig_Update orig, Player self)
 		{
-            DynamicData.For(self).Set(vitellaryChaserDashed, Vector2.Zero);
+            GetPlayerComponent(self).ChaserDashed = Vector2.Zero;
 			orig(self);
 		}
 
 		private static void Player_ctor(On.Celeste.Player.orig_ctor orig, Player self, Vector2 position, PlayerSpriteMode spriteMode)
 		{
 			orig(self, position, spriteMode);
-			var playerData = DynamicData.For(self);
-			playerData.Set(vitellaryInteractiveChaserStates, new List<ChaserState>());
-			playerData.Set(vitellaryChaserPosition, self.Position);
-			playerData.Set(vitellaryChaserSpeed, self.Speed);
-			playerData.Set(vitellaryChaserMovementCounter, self.movementCounter);
-			playerData.Set(vitellaryChaserDashed, Vector2.Zero);
+			self.Add(new InteractiveChaserPlayerComponent(self));
 		}
 
 		private static PlayerDeadBody Player_Die(On.Celeste.Player.orig_Die orig, Player self, Vector2 direction, bool evenIfInvincible, bool registerDeathInStats)
@@ -461,12 +449,40 @@ namespace vitmod
 			if (chasers.Count > 0)
 			{
 				var maxDelay = chasers.Max(e => (e as InteractiveChaser).FollowDelay);
-				var chaserStates = DynamicData.For(self).Get<List<ChaserState>>(vitellaryInteractiveChaserStates);
+				var chaserStates = GetPlayerComponent(self).ChaserStates;
 				while (chaserStates.Count > 0 && self.Scene.TimeActive - chaserStates[0].TimeStamp > maxDelay)
 					chaserStates.RemoveAt(0);
 				chaserStates.Add(new ChaserState(self));
 			}
 			orig(self);
+		}
+
+		private static InteractiveChaserPlayerComponent GetPlayerComponent(Player player)
+		{
+			var component = player.Get<InteractiveChaserPlayerComponent>();
+			if (component == null)
+			{
+				player.Add(component = new InteractiveChaserPlayerComponent(player));
+			}
+			return component;
+		}
+
+		private class InteractiveChaserPlayerComponent : Component
+		{
+			public List<ChaserState> ChaserStates;
+			public Vector2 ChaserPosition;
+			public Vector2 ChaserMovementCounter;
+			public Vector2 ChaserSpeed;
+			public Vector2 ChaserDashed;
+
+			public InteractiveChaserPlayerComponent(Player player) : base(active: false, visible: false)
+			{
+				ChaserStates = new List<ChaserState>();
+				ChaserPosition = player.Position;
+				ChaserMovementCounter = player.movementCounter;
+				ChaserSpeed = player.Speed;
+				ChaserDashed = Vector2.Zero;
+			}
 		}
 
 		private static Dictionary<MirrorMode, Vector2> MirrorScales = new Dictionary<MirrorMode, Vector2>()
@@ -695,7 +711,7 @@ namespace vitmod
 
 			public ChaserState(Player player)
 			{
-				var playerData = DynamicData.For(player);
+				var playerData = GetPlayerComponent(player);
 				Exists = true;
 				Bottom = player.BottomCenter;
 				Position = player.Position;
@@ -706,10 +722,10 @@ namespace vitmod
 				HairColor = player.Hair.Color;
 				Depth = player.Depth;
 				Scale = new Vector2(Math.Abs(player.Sprite.Scale.X) * (float)player.Facing, player.Sprite.Scale.Y);
-				EarlyPosition = playerData.Get<Vector2>(vitellaryChaserPosition);
-				MovementCounter = playerData.Get<Vector2>(vitellaryChaserMovementCounter);
-				Speed = playerData.Get<Vector2>(vitellaryChaserSpeed);
-				DashDir = playerData.Get<Vector2>(vitellaryChaserDashed);
+				EarlyPosition = playerData.ChaserPosition;
+				MovementCounter = playerData.ChaserMovementCounter;
+				Speed = playerData.ChaserSpeed;
+				DashDir = playerData.ChaserDashed;
 				DeltaTime = Engine.DeltaTime;
 				Ducking = player.Ducking;
 				State = player.StateMachine.State;
