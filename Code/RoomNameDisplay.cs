@@ -32,6 +32,8 @@ namespace Celeste.Mod.Code.Entities
         private float nextOutline;
 
         public float scale;
+        public float prevScale;
+        public float nextScale;
 
         private float outTimer;
         public RoomNameDisplay() {
@@ -41,6 +43,9 @@ namespace Celeste.Mod.Code.Entities
             textLerp = 0f;
             colorLerp = 1f;
             outTimer = 0f;
+            scale = 1f;
+            prevScale = 1f;
+            nextScale = 1f;
 
             bgColor = Color.Black;
             textColor = Color.White;
@@ -78,6 +83,7 @@ namespace Celeste.Mod.Code.Entities
             if (text == nextText)
             {
                 textLerp = Calc.Approach(textLerp, 1f, Engine.DeltaTime * speed);
+                scale = Calc.LerpClamp(prevScale, nextScale, Ease.CubeOut(textLerp));
             }
             else
             {
@@ -208,6 +214,7 @@ namespace Celeste.Mod.Code.Entities
                 drawLerp = 1f;
                 colorLerp = 1f;
                 textLerp = 1f;
+                scale = nextScale;
             }
         }
 
