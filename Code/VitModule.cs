@@ -1,11 +1,9 @@
 ﻿using Celeste;
 using Celeste.Mod;
-using MonoMod.Utils;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using MonoMod.RuntimeDetour;
 using MonoMod.Cil;
@@ -316,9 +314,6 @@ namespace vitmod
             On.Celeste.Player.Die += Player_Die;
             On.Celeste.Player.CallDashEvents += Player_CallDashEvents;
             On.Celeste.PlayerHair.GetHairColor += PlayerHair_GetHairColor;
-
-            //effects
-            Everest.Events.Level.OnLoadBackdrop += Level_OnLoadBackdrop;
 
             //misc
             On.Celeste.Level.LoadLevel += Level_LoadLevel;
@@ -794,25 +789,6 @@ namespace vitmod
             return orig(self, index);
         }
 
-        private Backdrop Level_OnLoadBackdrop(MapData map, BinaryPacker.Element child, BinaryPacker.Element above)
-        {
-            Backdrop result;
-            switch (child.Name)
-            {
-                case "CrystallineHelper/CustomWindSnow":
-                    result = new CustomWindSnow(
-                        child.Attr("colors", "ffffff"),
-                        child.Attr("alphas", "1"),
-                        child.AttrInt("amount", 240),
-                        child.AttrFloat("speedX", 0f),
-                        child.AttrFloat("speedY", 0f),
-                        child.AttrBool("ignoreWind", false)
-                    );
-                    return result;
-            }
-            return null;
-        }
-
         public static bool GetClassName(string name, Entity entity)
         {
             return entity.GetType().FullName == name || entity.GetType().Name == name;
@@ -862,7 +838,6 @@ namespace vitmod
             On.Celeste.Player.Die -= Player_Die;
             On.Celeste.Player.CallDashEvents -= Player_CallDashEvents;
             On.Celeste.PlayerHair.GetHairColor -= PlayerHair_GetHairColor;
-            Everest.Events.Level.OnLoadBackdrop -= Level_OnLoadBackdrop;
             On.Celeste.Level.LoadLevel -= Level_LoadLevel;
             On.Celeste.Level.Reload -= Level_Reload;
         }

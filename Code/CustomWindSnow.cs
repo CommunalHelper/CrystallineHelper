@@ -1,34 +1,37 @@
 ﻿using Celeste;
+using Celeste.Mod;
+using Celeste.Mod.Backdrops;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace vitmod
 {
+    [CustomBackdrop("CrystallineHelper/CustomWindSnow")]
     public class CustomWindSnow : Backdrop
     {
-        public CustomWindSnow(string colors, string alphas, int amount, float speedX, float speedY, bool ignoreWind) : base()
+        public CustomWindSnow(BinaryPacker.Element data) : base()
         {
-            this.colors = new List<Color>();
-            string[] colorStrings = colors.Split(',');
-            foreach(string color in colorStrings)
+            colors = new List<Color>();
+            string[] colorStrings = data.Attr("colors", "ffffff").Split(',');
+            foreach (string color in colorStrings)
             {
-                this.colors.Add(Calc.HexToColor(color));
+                colors.Add(Calc.HexToColor(color));
             }
-            this.alphas = new List<float>();
-            string[] alphaStrings = alphas.Split(',');
-            foreach(string alpha in alphaStrings)
+            alphas = new List<float>();
+            string[] alphaStrings = data.Attr("alphas", "1").Split(',');
+            foreach (string alpha in alphaStrings)
             {
-                this.alphas.Add(float.Parse(alpha));
+                alphas.Add(float.Parse(alpha));
             }
-            this.amount = amount;
-            addSpeed = new Vector2(speedX * 100f, speedY * 100f);
-            this.ignoreWind = ignoreWind;
+            amount = data.AttrInt("amount", 240);
+            addSpeed = new Vector2(data.AttrFloat("speedX", 0f) * 100f, data.AttrFloat("speedY", 0f) * 100f);
+            ignoreWind = data.AttrBool("ignoreWind", false);
+            windMultiplier = data.AttrFloat("windMultiplier", 1f);
+            amplifyVerticalWind = data.AttrBool("amplifyVerticalWind", true);
+            scaleMultiplier = data.AttrFloat("scale", 1f);
+            deformationStrength = data.AttrFloat("deformationStrength", 1f);
 
             Color = Color.White;
             CameraOffset = Vector2.Zero;
@@ -41,7 +44,7 @@ namespace vitmod
             for (int i = 0; i < positions.Length; i++)
             {
                 positions[i] = Calc.Random.Range(new Vector2(0f, 0f), new Vector2(640f, 360f));
-                particleColors[i] = rng.Next(0, this.colors.Count);
+                particleColors[i] = rng.Next(0, colors.Count);
             }
             sines = new SineWave[amount / 15];
             for (int i = 0; i < sines.Length; i++)
@@ -55,17 +58,19 @@ namespace vitmod
         {
             base.Update(scene);
             Level level = scene as Level;
-            visibleFade = Calc.Approach(visibleFade, IsVisible(level) ? 1f : 0f, Engine.DeltaTime * 2f); 
-            foreach(SineWave sine in sines)
+            visibleFade = Calc.Approach(visibleFade, IsVisible(level) ? 1f : 0f, Engine.DeltaTime * 2f);
+            foreach (SineWave sine in sines)
             {
                 sine.Update();
             }
-            windVector = ignoreWind ? Vector2.Zero : level.Wind;
+            windVector = ignoreWind ? Vector2.Zero : level.Wind * windMultiplier;
             windVector += addSpeed;
             scale.X = Math.Max(1f, Math.Abs(windVector.Length()) / 100f);
             float vertical = (float)Math.Abs(Math.Sin(Math.Atan2(windVector.Y, windVector.X)));
-            scale.X /=  Math.Max(1f - vertical, 0.4f);
+            scale.X /= Math.Max(1f - vertical, 0.4f);
             scale.Y = 1f / Math.Max(1f, scale.X * 0.25f);
+            scale = Vector2.Lerp(Vector2.One, scale, deformationStrength) * scaleMultiplier;
+
             rotation %= (float)Math.PI * 2;
             float target_rot = (float)Math.Atan2(windVector.Y, windVector.X);
             if (Math.Abs(rotation - target_rot) == Math.PI)
@@ -84,7 +89,7 @@ namespace vitmod
                 }
             }
             rotation = Calc.Approach(rotation, target_rot, Engine.DeltaTime * 8f);
-            if (windVector.X == 0f)
+            if (amplifyVerticalWind && windVector.X == 0f)
             {
                 windVector.Y *= 3f;
             }
@@ -110,7 +115,7 @@ namespace vitmod
                 limit = 0f;
             }
             limit = 0.6f + (1 - limit) * 0.4f;
-            foreach(Vector2 init in positions)
+            foreach (Vector2 init in positions)
             {
                 Color color = colors[particleColors[index]];
                 if (alphas.Count == colors.Count)
@@ -173,5 +178,13 @@ namespace vitmod
         private float rotation;
 
         private float visibleFade;
+
+        private float windMultiplier;
+
+        private bool amplifyVerticalWind;
+
+        private float scaleMultiplier;
+
+        private float deformationStrength;
     }
 }
