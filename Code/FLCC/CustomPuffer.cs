@@ -64,6 +64,7 @@ namespace vitmod
 		private bool needsNewHome;
 		private bool sameFace;
 		private BoostModes boostMode;
+        private bool alwaysBoost;
 
 		private float respawnTime = 2.5f;
 		private float eyeSpin = 0f;
@@ -81,7 +82,7 @@ namespace vitmod
         private bool tangible = true;
         private bool renderEye = true;
 
-		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish")
+		public CustomPuffer(Vector2 position, bool faceRight, float angle = 0f, float radius = 32f, float launchSpeed = 280f, string spriteName = "pufferFish", bool isStatic = false)
 			: base(position)
 		{
 			Collider = new Hitbox(12f, 10f, -6f, -5f);
@@ -97,8 +98,12 @@ namespace vitmod
 				Facing.X = -1f;
 			}
 			idleSine = new SineWave(0.5f, 0f);
-			idleSine.Randomize();
-			Add(idleSine);
+			if(!isStatic)
+            {
+                idleSine.Randomize();
+            }
+            this.isStatic = isStatic;
+            Add(idleSine);
 			anchorPosition = Position;
 			Position += new Vector2(idleSine.Value * 3f, idleSine.ValueOverTwo * 2f);
 			State = States.Idle;
@@ -121,13 +126,12 @@ namespace vitmod
 		}
 
 		public CustomPuffer(EntityData data, Vector2 offset, EntityID id)
-			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"))
+			: this(data.Position + offset, data.Bool("right", false), data.Float("angle", 0f), data.Float("radius", 32f), data.Float("launchSpeed", 280f), data.Attr("sprite", "pufferFish"), data.Bool("static",false))
 		{
 			ID = id;
 
 			respawnTime = data.Float("respawnTime", 2.5f);
 			alwaysShowOutline = data.Bool("alwaysShowOutline");
-			isStatic = data.Bool("static");
 			pushAny = data.Bool("pushAnyDir");
 			oneUse = data.Bool("oneUse");
 			deathFlag = data.Attr("deathFlag");
@@ -140,6 +144,7 @@ namespace vitmod
             launchState = data.Bool("setLaunchState", true);
             tangible=data.Bool("tangible", true);
             renderEye = data.Bool("renderEye", true);
+            alwaysBoost = data.Bool("alwaysBoost", false);
 
 
 			if (data.Bool("holdable"))
@@ -808,7 +813,7 @@ namespace vitmod
 				player.Speed.Y = Math.Min(Math.Max(-150f, -Math.Abs(launchSpeed)), player.Speed.Y);
 				player.AutoJump = true;
 			}
-			if (Input.MoveX.Value == Math.Sign(player.Speed.X))
+			if (Input.MoveX.Value == Math.Sign(player.Speed.X) || alwaysBoost)
 			{
                 player.explodeLaunchBoostTimer = 0f;
                 player.Speed.X *= 1.2f;

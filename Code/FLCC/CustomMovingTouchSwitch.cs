@@ -71,8 +71,10 @@ namespace vitmod
 			revisitPreviousNodes = data.Bool("revisitPreviousNodes");
 			var iconName = data.Attr("icon", "vanilla");
 			icon = new Sprite(GFX.Game, iconName == "vanilla" ? "objects/touchswitch/icon" : $"objects/{(iconName is "tall" or "triangle" or "circle" ? "CrystallineHelper/FLCC/" : "")}customMovingTouchSwitch/{iconName}/icon");
+            var borderName = data.Attr("border", "vanilla");
+            if(borderName != "vanilla") border = GFX.Game["objects/customMovingTouchSwitch/" + borderName];
 
-			Depth = 2000;
+            Depth = 2000;
 			Switch = string.IsNullOrEmpty(flag) ? (ISwitch)new BasicSwitch() : (ISwitch)new FlagSwitch(flag, inverted, allowDisable);
 			Add(Switch as Component);
 			if (persistent)

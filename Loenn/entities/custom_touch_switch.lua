@@ -1,4 +1,5 @@
 local drawableSprite = require "structs.drawable_sprite"
+local atlases = require("atlases")
 
 local customTouchSwitch = {}
 
@@ -23,9 +24,12 @@ customTouchSwitch.placements = {
             randomOrder = false,
             pathLength = -1,
             revisitPreviousNodes = false,
+            border = "vanilla"
         }
     }
 }
+
+customTouchSwitch.fieldOrder = {"x","y","moveTime","flag","icon","border","inactiveColor","activeColor","finishColor","movingColor","easing","pathLength"}
 
 local easeTypes = {
     "Linear", "SineIn", "SineOut", "SineInOut", "QuadIn", "QuadOut", "QuadInOut", "CubeIn", "CubeOut", "CubeInOut", "QuintIn", "QuintOut", "QuintInOut", "BackIn", "BackOut", "BackInOut", "ExpoIn", "ExpoOut", "ExpoInOut", "BigBackIn", "BigBackOut", "BigBackInOut", "ElasticIn", "ElasticOut", "ElasticInOut", "BounceIn", "BounceOut", "BounceInOut"
@@ -41,6 +45,9 @@ customTouchSwitch.fieldInformation = {
     pathLength = {
         fieldType = "integer",
     },
+    border = {
+        default = "vanilla"
+    },
 }
 
 function customTouchSwitch.ignoredFields(ent)
@@ -55,7 +62,11 @@ customTouchSwitch.nodeLimits = {0, -1}
 customTouchSwitch.nodeLineRenderType = "line"
 
 function customTouchSwitch.sprite(room, entity)
-    local containerSprite = drawableSprite.fromTexture("objects/touchswitch/container", entity)
+    local borderResource = "objects/touchswitch/container"
+    if (entity.border ~= nil) and (entity.border ~= "vanilla") and atlases.gameplay["objects/customMovingTouchSwitch/" .. entity.border] then
+        borderResource = "objects/customMovingTouchSwitch/" .. entity.border
+    end
+    local containerSprite = drawableSprite.fromTexture(borderResource, entity)
 
     local iconResource = "objects/touchswitch/icon00"
     if entity.icon ~= "vanilla" then

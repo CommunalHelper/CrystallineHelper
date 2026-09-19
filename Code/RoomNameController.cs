@@ -45,7 +45,8 @@ namespace Celeste.Mod.Code.Entities
             display.SetColor(textColor, bgColor, lineColor, lineAmt);
             display.SetTimer(Math.Max(timer, 0f));
             display.nextOffset = yOffset;
-            display.scale = scale;
+            display.prevScale = display.scale;
+            display.nextScale = scale;
         }
     }
 }

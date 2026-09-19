@@ -194,10 +194,13 @@ namespace vitmod
             }
         }
 
-        private bool InView() {
+        private bool InView()
+        {
             Camera camera = (Scene as Level).Camera;
-            return ((bounds.Right > camera.Left - 16f) || (bounds.Left < camera.Right + 16f))
-                && ((bounds.Bottom > camera.Top - 16f) || (bounds.Top < camera.Bottom + 16f));
+            return bounds.Right > camera.Left - 16f
+                   && bounds.Left < camera.Right + 16f
+                   && bounds.Bottom > camera.Top - 16f
+                   && bounds.Top < camera.Bottom + 16f;
         }
 
         public void OnPlayer(Player player)
