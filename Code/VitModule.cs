@@ -253,13 +253,8 @@ namespace vitmod
         {
             base.Initialize();
             TriggerBeam.Initialize();
-        }
-        public override void Load()
-        {
-            //cacheing
-            deltaTimeInfo = typeof(Engine).GetProperty("DeltaTime");
-            rawDeltaTimeInfo = typeof(Engine).GetProperty("RawDeltaTime");
-            rendererListSceneInfo = typeof(RendererList).GetField("scene", BindingFlags.NonPublic | BindingFlags.Instance);
+            
+            // All mods are loaded at Initialize()-time, so we can correctly check the presence of optional dependencies now
             frostHelperLoaded = Everest.Loader.DependencyLoaded(new EverestModuleMetadata
             {
                 Name = "FrostHelper",
@@ -270,6 +265,18 @@ namespace vitmod
                 Name = "VivHelper",
                 Version = new Version(1, 5, 4)
             });
+            
+            if (frostHelperLoaded)
+            {
+                HookedKeyIceInit();
+            }
+        }
+        public override void Load()
+        {
+            //cacheing
+            deltaTimeInfo = typeof(Engine).GetProperty("DeltaTime");
+            rawDeltaTimeInfo = typeof(Engine).GetProperty("RawDeltaTime");
+            rendererListSceneInfo = typeof(RendererList).GetField("scene", BindingFlags.NonPublic | BindingFlags.Instance);
 
             TypeHelper.Load();
             NoJumpTrigger.Load();
@@ -279,10 +286,7 @@ namespace vitmod
             ForceDashCrystal.Load();
             NoMoveTrigger.Load();
             ResetDoorTrigger.Load();
-            if (frostHelperLoaded)
-            {
-                HookedKeyIceInit();
-            }
+
             CustomWindController.Load();
             TriggerTrigger.Load();
             TimeCrystal.Load();
