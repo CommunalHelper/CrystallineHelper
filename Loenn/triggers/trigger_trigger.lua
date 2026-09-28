@@ -21,6 +21,8 @@ local activationTypes = {
     ["On Input"] = "OnInput",
     ["Grounded"] = "OnGrounded",
     ["Player State"] = "OnPlayerState",
+    ["Counter"] = "Counter",
+    ["Slider"] = "Slider",
 }
 
 local comparisonTypes = {
@@ -97,6 +99,10 @@ function triggerTrigger.ignoredFields(entity)
         "includeCoyote",
         "includeWallJump",
         "resetAfterJump",
+        "counterValue",
+        "sliderValue",
+        "counterName",
+        "sliderName",
     }
 
     local function doNotIgnore(value)
@@ -152,6 +158,14 @@ function triggerTrigger.ignoredFields(entity)
         doNotIgnore("resetAfterJump")
     elseif atype == "OnPlayerState" then
         doNotIgnore("playerState")
+    elseif atype == "Counter" then
+        doNotIgnore("counterValue")
+        doNotIgnore("counterName")
+        iscomparison = true
+    elseif atype == "Slider" then
+        doNotIgnore("sliderName")
+        doNotIgnore("sliderValue")
+        iscomparison = true
     end
 
     if iscomparison then
@@ -197,6 +211,10 @@ for _, mode in pairs(activationTypes) do
             includeCoyote = false,
             includeWallJump = true,
             resetAfterJump = false,
+            counterValue = "0",
+            sliderValue = "0.0",
+            counterName = "counter",
+            sliderName = "slider",
         }
     }
     table.insert(triggerTrigger.placements, placement)
