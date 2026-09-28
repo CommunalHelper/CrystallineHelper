@@ -108,6 +108,10 @@ triggers.vitellary/flaginsidetrigger.placements.name.flag_inside=Flag Inside Tri
 # Effects
 
 style.effects.CrystallineHelper/CustomWindSnow.name=Custom Wind Snow
+style.effects.CrystallineHelper/CustomWindSnow.description.windMultiplier=How much wind speed affects the snow.
+style.effects.CrystallineHelper/CustomWindSnow.description.amplifyVerticalWind=If set, the effect of purely vertical wind is multiplied by 3, similar to vanilla Wind Snow.
+style.effects.CrystallineHelper/CustomWindSnow.description.scale=The scale multiplier for particles.
+style.effects.CrystallineHelper/CustomWindSnow.description.deformationStrength=How much particles are squashed and stretched by wind speed.
 
 # - Tooltips -
 
