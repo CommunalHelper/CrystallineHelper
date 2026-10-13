@@ -520,6 +520,7 @@ namespace vitmod
                 normalHurtbox.Center *= mirror;
                 duckHurtbox.Center *= mirror;
 				Blacklist = blacklist;
+                StateMachine.State = 0;
 			}
 
 			public override void Added(Scene scene)
