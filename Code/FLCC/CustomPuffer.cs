@@ -416,7 +416,7 @@ namespace vitmod
 			level.Displacement.AddBurst(Position, 0.4f, 12f, 36f, 0.5f);
 			level.Displacement.AddBurst(Position, 0.4f, 24f, 48f, 0.5f);
 			level.Displacement.AddBurst(Position, 0.4f, 36f, 60f, 0.5f);
-			for (float angle = 0f; angle < (float)Math.PI * 2f; angle += (float)(Math.PI / 18))
+			for (float angle = 0f; angle < (float)Math.PI * 2f; angle += (float)(Math.PI / 18.0))
 			{
 				Vector2 position = base.Center + Calc.AngleToVector(angle + Calc.Random.Range(-(float)Math.PI / 90f, (float)Math.PI / 90f), Calc.Random.Range(12, 18));
 				level.Particles.Emit(Seeker.P_Regen, position, angle);
@@ -455,26 +455,30 @@ namespace vitmod
 			if (drawSpriteOutline)
 				(isHappy ? happySprite : sprite).DrawSimpleOutline();
 
-			float outlineAlpha = playerAliveFade * Calc.ClampedMap((Position - lastPlayerPos).Length(), 128f, 96f);
-			if ((outlineAlpha > 0f || alwaysShowOutline) && State != States.Gone && State != States.Held)
+			float outlineAlpha = alwaysShowOutline ? 1f : playerAliveFade * Calc.ClampedMap((Position - lastPlayerPos).Length(), blastRadius + 96f, blastRadius + 64f);
+			if (outlineAlpha > 0f && State != States.Gone && State != States.Held)
 			{
 				Vector2 highlightPos = lastPlayerPos;
 				highlightPos.Y += highlightPos.Y - base.Y;
 				highlightPos.X += highlightPos.X - base.X;
 				float highlightAngle = (highlightPos - Position).Angle();
+				float outlineWobble = isStatic ? 0f : (float)Math.Sin(Scene.TimeActive * 0.5f) * 0.02f;
 				int segments = (int)blastRadius - 4;
 				for (int i = 0; i < segments; i++)
 				{
-					float segmentAngleWobble = isStatic ? 0.01f : (float)Math.Sin(Scene.TimeActive * 0.5f) * 0.02f;
-					float segmentAngle = Calc.Map((float)i / (float)segments + segmentAngleWobble, 0f, 1f, 0, (float)Math.PI);
+					float segmentAngle = Calc.Map((float)i / (segments - 1) + outlineWobble, 0f, 1f, 0f, (float)Math.PI);
 					segmentAngle += bounceWiggler.Value * 20f * ((float)Math.PI / 180f) + blastAngle;
 					Vector2 segmentDirection = Calc.AngleToVector(segmentAngle, 1f);
 					Vector2 segmentPosition = Position + segmentDirection * blastRadius;
 
-					float segmentAlpha = 1f;
-					if (!alwaysShowOutline)
+					float segmentAlpha;
+					if (alwaysShowOutline)
 					{
-						segmentAlpha = Calc.ClampedMap(Calc.AbsAngleDiff(segmentAngle, highlightAngle), (float)Math.PI / 2f, (float)(Math.PI / 18));
+						segmentAlpha = 0.8f;
+					}
+					else
+					{
+						segmentAlpha = Calc.ClampedMap(Calc.AbsAngleDiff(segmentAngle, highlightAngle), (float)Math.PI / 2f, (float)(Math.PI / 18.0));
 						segmentAlpha = Ease.CubeOut(segmentAlpha) * 0.8f * outlineAlpha;
 						if (segmentAlpha <= 0f)
 							continue;
@@ -482,7 +486,8 @@ namespace vitmod
 
 					if (i == 0 || i == segments - 1)
 					{
-						Draw.Line(segmentPosition, segmentPosition - segmentDirection * (blastRadius - 12f), outlineColor * segmentAlpha);
+						float edgeSegmentLength = blastRadius - Calc.ClampedMap(blastRadius, 0f, 32f, 0f, 22f);
+						Draw.Line(segmentPosition, segmentPosition - segmentDirection * edgeSegmentLength, outlineColor * segmentAlpha);
 						continue;
 					}
 
@@ -491,7 +496,7 @@ namespace vitmod
 						segmentPositionWobble *= -1f;
 					segmentPosition += segmentPositionWobble;
 
-					if (Calc.AbsAngleDiff(segmentAngle, highlightAngle) <= (float)(Math.PI / 18))
+					if (Calc.AbsAngleDiff(segmentAngle, highlightAngle) <= (float)(Math.PI / 18.0))
 						Draw.Line(segmentPosition, segmentPosition - segmentDirection * 3f, outlineColor * segmentAlpha);
 					else
 						Draw.Point(segmentPosition, outlineColor * segmentAlpha);
